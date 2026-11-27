@@ -9,9 +9,10 @@
     "test:viewer": "node scripts/test-viewer-settings.mjs",
     "test:genre": "node scripts/test-genre-cache.mjs",
     "test:history": "node scripts/test-history-audio.mjs",
-    "test": "npm run test:history && npm run test:dubs && npm run test:viewer && npm run test:genre && npm run test:ai",
+    "test": "npm run test:images && npm run test:history && npm run test:dubs && npm run test:viewer && npm run test:genre && npm run test:ai",
     "test:ai": "node scripts/test-v5413.mjs",
-    "test:dubs": "node scripts/test-v5413d.mjs"
+    "test:dubs": "node scripts/test-v5413d.mjs",
+    "test:images": "node scripts/test-upcoming-posters.mjs && node scripts/test-image-cache.mjs"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.7",

@@ -4,6 +4,8 @@
 import { describeKey, envFileReport, maskedKeys } from './load-env.js';
 import fs from 'node:fs';
 import { runtimeDataDir } from './runtime-data.js';
+import { createAnimePosterLoader } from './anime-posters.js';
+import { mergeUpcoming } from './upcoming.js';
 import { dismissHistory } from './history-state.js';
 import { ANIME_AUDIO_KEYS, REGIONAL_AUDIO_LANGUAGES } from './audio-languages.js';
 import path from 'node:path';
@@ -2253,7 +2255,8 @@ const FALLBACK_STILL_SVG = Buffer.from(
   'utf8'
 );
 
-async function handleImageProxy(req, res, url) {
+const officialAnimePoster=createAnimePosterLoader(id=>remote(`https://api.jikan.moe/v4/anime/${id}`,{ttl:86400000,timeout:4000,headers:{Accept:'application/json'}}));
+async function handleImageProxy(req, res, url, cacheControl='public, max-age=86400, stale-while-revalidate=604800') {
   const raw = String(url.searchParams.get('u') || '').trim();
   let parsed = null;
   try { parsed = new URL(raw); } catch {}
@@ -2279,7 +2282,7 @@ async function handleImageProxy(req, res, url) {
     res.writeHead(200, {
       'Content-Type': hit.type,
       'Content-Length': String(hit.buf.byteLength),
-      'Cache-Control': 'no-store'
+      'Cache-Control': cacheControl
     });
     return res.end(hit.buf);
   }
@@ -2345,7 +2348,7 @@ async function handleImageProxy(req, res, url) {
     res.writeHead(200, {
       'Content-Type': result.type,
       'Content-Length': String(result.buf.byteLength),
-      'Cache-Control': 'no-store'
+      'Cache-Control': cacheControl
     });
     return res.end(result.buf);
   }
@@ -2438,6 +2441,16 @@ function transcriptionRate(key, limit) {
 async function api(req, res, url) {
   let p = url.pathname, q = url.searchParams;
   try {
+    if (p === '/api/anime-poster') {
+      const id=String(q.get('id')||'');
+      if(!/^[1-9]\d{0,9}$/.test(id))return json(res,{error:'Invalid anime ID'},400,req);
+      const poster=await officialAnimePoster(id),fallback=megaForIds(id)?.poster;
+      const source=poster||(/^https:\/\//i.test(fallback||'')?fallback:'');
+      if(!source)return json(res,{error:'Poster temporarily unavailable'},502,req);
+      const image=new URL('/api/img',url);image.searchParams.set('u',source);
+      if(!poster)res.setHeader('X-Kozutv-Image-Expiry',String(Date.now()+3600000));
+      return handleImageProxy(req,res,image,poster?'public, max-age=86400, stale-while-revalidate=604800':'public, max-age=3600');
+    }
     if (p === '/api/img') return await handleImageProxy(req, res, url);
     if (p === '/api/ai-transcription') {
       if (req.method !== 'POST') return json(res, { error: 'Method not allowed.' }, 405, req);
@@ -2546,9 +2559,9 @@ async function api(req, res, url) {
       const experienced=typeof body.experienced === 'string' ? body.experienced.trim() : '';
       const episodeSeason=typeof body.episodeSeason === 'string' ? body.episodeSeason.trim() : '';
       const description=typeof body.description === 'string' ? body.description.trim() : '';
-      if (!experienced || experienced.length > 300 || episodeSeason.length > 300 || description.length > 5000) return json(res, {error:'Please check the form.'}, 400, req);
+      if (!description || experienced.length > 300 || episodeSeason.length > 300 || description.length > 5000) return json(res, {error:'Please check the form.'}, 400, req);
       recordAttempt(reportAttempts, ip, 3600000);
-      if (!await submitReport(experienced, episodeSeason, description)) return json(res, {error:'Could not submit. Please try again.'}, 503, req);
+      if (!await submitReport(experienced || 'General', episodeSeason, description)) return json(res, {error:'Could not submit. Please try again.'}, 503, req);
       return json(res, {ok:true}, 200, req);
     }
 
@@ -3048,12 +3061,11 @@ async function api(req, res, url) {
     }
 
     if (p === '/api/upcoming') {
-      // Upcoming anime: announced, not yet released, with artwork.
-      let d = await anilist(
-        `query{Page(page:1,perPage:50){media(type:ANIME,status:NOT_YET_RELEASED,sort:POPULARITY_DESC,isAdult:false){${fields}}}}`,
-        {},
-        14000
-      ).catch(() => null);
+      const [d,movies,tv]=await Promise.all([
+        anilist(`query{Page(page:1,perPage:40){media(type:ANIME,status:NOT_YET_RELEASED,sort:POPULARITY_DESC,isAdult:false){${fields}}}}`,{},14000).catch(()=>null),
+        tmdb('discover/movie',{'primary_release_date.gte':today(),'sort_by':'popularity.desc',include_adult:'false'}).catch(()=>null),
+        tmdb('discover/tv',{'first_air_date.gte':today(),'sort_by':'popularity.desc',include_adult:'false'}).catch(()=>null)
+      ]);
       let items = (d?.Page?.media || [])
         .filter(x => x?.idMal || x?.id)
         .map(x => {
@@ -3064,7 +3076,7 @@ async function api(req, res, url) {
           item.format = x.format || item.format;
           return item;
         });
-      return json(res, { items }, 200, req);
+      return json(res, { items:mergeUpcoming(items,movies?.results,tv?.results,today()) }, 200, req);
     }
 
     if (p === '/api/filter') {
@@ -3241,12 +3253,14 @@ async function api(req, res, url) {
       }
 
       let d = await tmdb(type + '/' + id);
-      if (!releasedOtt({ ...d, media_type: type }, 0, false)) {
+      const releaseDate=String(d.release_date||d.first_air_date||'');
+      const announced=!d.adult && Boolean(d.title||d.name) && /^\d{4}-\d{2}-\d{2}$/.test(releaseDate) && releaseDate>today();
+      if (!announced && !releasedOtt({ ...d, media_type: type }, 0, false)) {
         return json(res, { error: 'This title is unreleased or unavailable for streaming.' }, 404, req);
       }
       let item = ott({ ...d, media_type: type });
-      item.upcoming = false;
-      item.playable = true;
+      item.upcoming = announced;
+      item.playable = !announced;
       let seasons = type === 'tv'
         ? (d.seasons || [])
             .filter(x => x.season_number >= 1 && Number(x.episode_count) > 0 && (!x.air_date || String(x.air_date).slice(0, 10) <= today()))

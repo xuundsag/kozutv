@@ -1671,13 +1671,12 @@ function create(player,options={}){
    // The track that is playing is always listed, even if a late-arriving list
    // has not caught up yet.
    if(!choices.some(([key])=>key===currentLang)){const labels={hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',bn:'Bengali'};choices.push([currentLang,labels[currentLang]||currentLang.toUpperCase()])}
-   const discovery=data.audioDiscovery==='loading'?'<div class="mp-audio-status" role="status">Finding more audio languages…</div>':data.audioDiscovery==='blocked'?'<div class="mp-audio-status" role="status">The regional audio provider is refusing this server. Available tracks are listed above.</div>':['empty','error'].includes(data.audioDiscovery)?'<div class="mp-audio-status" role="status">No additional audio could be reached for this episode. Try again later.</div>':'';
+
    const sourceRows=choices.map(([key,label])=>`<button type="button" class="mp-list-row ${currentLang===key?'selected':''}" data-audio-choice="${esc(key)}"><span>${esc(label)}</span></button>`).join('');
    const tracks=Array.from(player.audioTracks?.()||[]);
    list.innerHTML=tracks.length>1
     ?'<div class="mp-audio-group">Audio source</div>'+sourceRows+'<div class="mp-audio-group">Audio track</div>'+tracks.map((track,i)=>`<button type="button" class="mp-list-row ${track.enabled?'selected':''}" data-audio-track="${i}"><span>${esc(formatAudioLabel(track.label,track.language,i))}</span></button>`).join('')
     :sourceRows;
-   list.insertAdjacentHTML('beforeend',discovery);
    return;
   }
   let tracks=Array.from(player.audioTracks?.()||[]);

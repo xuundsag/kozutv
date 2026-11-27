@@ -38,6 +38,7 @@ async function mockApi(context){
  await context.route('**/api/**',async route=>{
   const u=new URL(route.request().url());
   if(u.pathname==='/api/browse')return json(route,{items,spotlight:items.slice(0,3),suggestions:[]});
+  if(u.pathname==='/api/upcoming')return json(route,{items:['anime','movie','tv'].map((type,i)=>({...item,id:String(424242+i),type,title:type+' upcoming',upcoming:true,releaseDate:'2027-01-01'}))});
   if(u.pathname==='/api/genre'||u.pathname==='/api/collection')return json(route,{items,hasMore:false,totalResults:items.length,note:'Live Hindi dub was detected: legacy unwanted notice.'});
   if(u.pathname==='/api/detail')return json(route,{item:{...item,audioNote:'Regional dub was detected: legacy unwanted notice.'},seasons:[{id:item.id,name:'Season 1',episodes:3}],episodes:[]});
   if(u.pathname==='/api/anime-episodes')return json(route,{episodes:[1,2,3].map(number=>({number,title:`Episode ${number}`})),hasNext:false});
@@ -81,6 +82,8 @@ function watchErrors(p,label){p.on('pageerror',e=>errors.push(label+': '+String(
  for(const width of [1440,390,320]){
   const c=await browser.newContext({viewport:{width,height:900}});await mockApi(c);const p=await c.newPage();watchErrors(p,'layout '+width);await ready(p);
   assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth),width,'no overflow at '+width);
+  if(width<651){await p.locator('.searchbox').click();const gap=await p.evaluate(()=>{const a=document.querySelector('.menu-toggle-nav').getBoundingClientRect(),b=document.querySelector('.searchbox').getBoundingClientRect();return b.left-a.right});assert(gap>=0&&gap<=8,'mobile expanded search has no large menu gap: '+gap);await p.keyboard.press('Escape')}
+
   assert.equal(await p.locator('.setting-row small,.setting-row p').count(),0,'no descriptions');
   const flags=['kozutv-resume-playback','kozutv-save-history','kozutv-spotlight-autoplay'];for(const f of flags)assert.equal(await p.locator(`[data-site-pref="${f}"]`).isChecked(),true,f);
   assert.equal(await p.locator('[data-site-pref="kozutv-reduce-motion"]').isChecked(),false);
@@ -148,6 +151,11 @@ function watchErrors(p,label){p.on('pageerror',e=>errors.push(label+': '+String(
  await a.close();
  console.log('PASS no Cache Token or Discord card, preferences persist, AI switch present with no disclosure');
 
+ const uc=await browser.newContext();await mockApi(uc);const up=await uc.newPage();await ready(up,'/upcoming');assert.equal(await up.locator('h1.section-title').innerText(),'Upcoming');assert.equal(await up.locator('.card').count(),3);assert.equal(await up.locator('.badge-upcoming').count(),3);assert(await up.locator('.card p').allInnerTexts().then(rows=>['Anime Series','Movie','TV Series'].every(type=>rows.some(row=>row.includes(type)))));await uc.close();
+ const rc=await browser.newContext();await mockApi(rc);let reportBody;
+ await rc.route('**/api/reports',route=>{reportBody=route.request().postDataJSON();return json(route,{ok:true})});
+ const rp=await rc.newPage();await ready(rp,'/report');assert.equal(await rp.locator('form input').count(),0);assert.equal(await rp.locator('form textarea').count(),1);
+ await rp.locator('textarea').fill('Playback stopped after choosing Tamil.');await rp.locator('form button').click();await rp.waitForFunction(()=>document.querySelector('#report-status').textContent.includes('successfully'));assert.deepEqual(Object.keys(reportBody),['description']);await rc.close();
  // Randomized Browse rows and both menu/dropdown exclusions.
  const cat=await browser.newContext({viewport:{width:1200,height:900}});await mockApi(cat);
  await cat.addInitScript(()=>{const f=window.setInterval;window.setInterval=function(cb,ms,...args){if(ms===6500)window.__testCarousel=cb;return f(cb,ms,...args)}});
@@ -205,14 +213,19 @@ function watchErrors(p,label){p.on('pageerror',e=>errors.push(label+': '+String(
  // Dismiss cards through the real history endpoint, preserving the next at zero.
  const hc=await browser.newContext({viewport:{width:1200,height:900}});await mockApi(hc);
  const hp=await hc.newPage();watchErrors(hp,'history');await ready(hp);
- await hp.evaluate(async item=>{await fetch('/api/history',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...item,episode:1,season:1,currentTime:179,duration:180})})},item);
- await ready(hp,'/browse');await hp.locator('[data-dismiss-continue]').waitFor();
+ await hp.evaluate(async item=>{await fetch('/api/history',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...item,type:'movie',id:'98765',episode:1,season:1,currentTime:12,duration:180})});await fetch('/api/history',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...item,episode:1,season:1,currentTime:179,duration:180})})},item);
+ await ready(hp,'/browse');await hp.locator('[data-dismiss-continue]').first().waitFor();
+ await hp.evaluate(()=>{window.__originalPoster=document.querySelector('.continue-card img');window.__siblingPoster=document.querySelectorAll('.continue-card img')[1]});
  for(const expected of [2,3]){
-  await hp.locator('[data-dismiss-continue]').click();
+  await hp.locator('[data-dismiss-continue]').first().click();
   await hp.waitForFunction(ep=>{const card=document.querySelector('.continue-card');return card?.dataset.open.includes('episode='+ep)},expected);
   const record=await hp.evaluate(()=>fetch('/api/state').then(r=>r.json()).then(s=>s.history[0]));
   assert.equal(record.episode,expected);assert.equal(record.currentTime,0);assert.equal(record.duration,0);
+  assert(await hp.evaluate(()=>document.querySelector('.continue-card img')===window.__originalPoster),'advancement retains image element');
+  assert.equal(await hp.locator('.toast:visible').count(),0,'dismissal has no status toast');
  }
+ await hp.locator('[data-dismiss-continue]').first().click();await hp.waitForFunction(()=>document.querySelectorAll('.continue-card').length===1);
+ assert(await hp.evaluate(()=>document.querySelector('.continue-card img')===window.__siblingPoster),'surviving card retains image while filling gap');
  await hp.locator('[data-dismiss-continue]').click();await hp.waitForSelector('.continue-section',{state:'detached'});
  await hc.close();console.log('PASS card X advances to actual next at zero and removes finished title');
 

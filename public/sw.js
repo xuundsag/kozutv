@@ -1,6 +1,6 @@
-// kozuTV essential shell only. Images and catalogue API results are deliberately
-// not stored in CacheStorage: large posters rapidly filled mobile storage.
-const VERSION = 'kozutv-v44';
+// Bounded persistent images, separate from the versioned application shell.
+importScripts('/image-cache.js');
+const VERSION = 'kozutv-v45';
 const SHELL = `${VERSION}-shell`;
 const ESSENTIAL = [
   '/', '/index.html', '/app.js', '/style.css', '/icons.js',
@@ -23,9 +23,12 @@ self.addEventListener('activate',event=>event.waitUntil((async()=>{
 self.addEventListener('fetch',event=>{
  const req=event.request;if(req.method!=='GET')return;
  const url=new URL(req.url);if(url.origin!==self.location.origin)return;
+ if(req.destination==='image'||url.pathname==='/api/img'||url.pathname==='/api/anime-poster'){
+  event.respondWith(cachedImage(req,event));return;
+ }
  if(url.pathname.startsWith('/api/')){
-  // API and image requests always go to the network, never to persistent cache.
-  event.respondWith(url.pathname==='/api/img'?fetch(req,{cache:'no-store'}):fetch(req));return;
+  // Only public images are persisted. Account/catalogue/media APIs stay live.
+  event.respondWith(fetch(req));return;
  }
  if(req.mode==='navigate'){
   event.respondWith((async()=>{try{const response=await fetch(req);if(response.ok){const c=await caches.open(SHELL);await c.put('/index.html',response.clone())}return response}catch(error){const c=await caches.open(SHELL);const saved=await c.match('/index.html');if(saved)return saved;throw error}})());return;

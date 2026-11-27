@@ -12,7 +12,7 @@ let playerAssetsPromise=null;
 function loadPlayerAssets(){
  if(window.videojs&&window.MegaPlayUI)return Promise.resolve();
  if(!playerAssetsPromise)playerAssetsPromise=(async()=>{
-  for(let src of ['/vendor/video.min.js','/megaplay-controls.js?v=5.4.19-v44'])await new Promise((resolve,reject)=>{
+  for(let src of ['/vendor/video.min.js','/megaplay-controls.js?v=5.4.19-v45'])await new Promise((resolve,reject)=>{
    let script=document.createElement('script');script.src=src;script.async=true;script.onload=resolve;
    script.onerror=()=>{script.remove();reject(Error('The player assets could not be loaded.'))};
    document.head.append(script);
@@ -863,7 +863,12 @@ function nav(path){
  window.scrollTo(0,0);
 }
 
-function card(x){return `<article class="card" data-open="${url(x.type,x.id)}"><div class="poster"><img data-load-whole decoding="async" loading="lazy" src="${safeImage(x.poster||x.backdrop)||FALLBACK_POSTER_DATA_URI}" data-alt-src="${safeImage(x.backdrop||'')}" alt="${esc(x.title)}">${x.rating?`<span class="rating">${metaIco('star')}${esc(x.rating)}</span>`:''}${x.upcoming?'<span class="badge badge-upcoming">Upcoming</span>':''}</div><h3 title="${esc(x.title)}">${esc(x.title)}</h3><p>${esc(x.year||'New')} &nbsp;·&nbsp; ${x.type==='anime'?(x.isMovie?'Anime Movie':'Anime Series'):x.type==='tv'?'TV Series':'Movie'}</p></article>`}
+function cardPoster(x){
+ const fallback=safeImage(x.poster||x.backdrop)||FALLBACK_POSTER_DATA_URI;
+ if(x.type!=='anime'||!/^\d+$/.test(String(x.id)))return fallback;
+ return `/api/anime-poster?id=${encodeURIComponent(x.id)}`;
+}
+function card(x){return `<article class="card" data-open="${url(x.type,x.id)}"><div class="poster"><img data-load-whole decoding="async" loading="lazy" src="${cardPoster(x)}" data-alt-src="${safeImage(x.poster||x.backdrop||'')}" alt="${esc(x.title)}">${x.rating?`<span class="rating">${metaIco('star')}${esc(x.rating)}</span>`:''}${x.upcoming?'<span class="badge badge-upcoming">Upcoming</span>':''}</div><h3 title="${esc(x.title)}">${esc(x.title)}</h3><p>${esc(x.year||'New')} &nbsp;·&nbsp; ${x.type==='anime'?(x.isMovie?'Anime Movie':'Anime Series'):x.type==='tv'?'TV Series':'Movie'}</p></article>`}
 function grid(data,idAttr=''){return data.length?`<div class="grid"${idAttr?` id="${idAttr}"`:''}>${data.map(card).join('')}</div>`:'<div class="empty">No titles found.</div>'}
 
 function spotlightArt(x){
@@ -1383,7 +1388,7 @@ async function details(type,id){
    ? `<span class="upcoming-badge">Upcoming</span><span>${ico('calendar')}${esc(x.releaseDate?releaseLabel(x.releaseDate):(x.releaseGuess||'Release date to be announced'))}</span>${x.releaseDate&&countdownLabel(x.releaseDate)?`<span class="upcoming-count" data-countdown="${esc(x.releaseDate)}">${esc(countdownLabel(x.releaseDate))}</span>`:''}`
    :(x.unavailable?`<span class="upcoming-badge badge-unavailable">Not yet available</span>`
    :(showEpisodes&&epDisplayCount?`<span>${epDisplayCount} episodes</span>`:''));
-  app.innerHTML=`<div class="container content detail"><div class="detail-layout"><img class="detail-poster" src="${safeImage(x.poster)}" alt="${esc(x.title)}"><div class="detail-heading"><h1>${esc(x.title)}</h1><div class="meta"><span>${ico('star')}${esc(x.rating||'N/A')}</span><span class="quality">HD</span>${metaTail}</div></div><div class="detail-body"><div class="description detail-description" data-description-toggle role="button" tabindex="0" aria-expanded="false">${esc(x.description||'No description available.')}</div><div class="chips">${(x.genres||[]).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}</div>${actions}</div></div>${type==='anime'&&showEpisodes?`<section class="season-section">${sectionTitle((d.seasons.length>1||regSeasonSelect)?'Seasons & Episodes':'Episodes','episodes')}${regSeasonSelect||((d.seasons.length>1)?`<select class="season-select" id="detail-anime-season" aria-label="Anime season">${d.seasons.map(s=>`<option value="${s.id}" ${String(s.id)===String(x.id)?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`:'')}<div id="detail-anime-episodes" class="anime-episodes"><div class="loading">Loading…</div></div></section>`:''}${type==='tv'&&!x.upcoming?`<section class="season-section">${sectionTitle('Seasons & Episodes','episodes')}<select class="season-select" id="detail-tv-season" aria-label="Season">${d.seasons.map(s=>`<option value="${s.number}">${esc(s.name)}</option>`).join('')}</select><div id="detail-episodes" class="episode-detail-list">Loading…</div></section>`:''}</div>`;
+  app.innerHTML=`<div class="container content detail"><div class="detail-layout"><img class="detail-poster" src="${cardPoster(x)}" data-alt-src="${safeImage(x.poster||'')}" alt="${esc(x.title)}"><div class="detail-heading"><h1>${esc(x.title)}</h1><div class="meta"><span>${ico('star')}${esc(x.rating||'N/A')}</span><span class="quality">HD</span>${metaTail}</div></div><div class="detail-body"><div class="description detail-description" data-description-toggle role="button" tabindex="0" aria-expanded="false">${esc(x.description||'No description available.')}</div><div class="chips">${(x.genres||[]).map(g=>`<span class="chip">${esc(g)}</span>`).join('')}</div>${actions}</div></div>${type==='anime'&&showEpisodes?`<section class="season-section">${sectionTitle((d.seasons.length>1||regSeasonSelect)?'Seasons & Episodes':'Episodes','episodes')}${regSeasonSelect||((d.seasons.length>1)?`<select class="season-select" id="detail-anime-season" aria-label="Anime season">${d.seasons.map(s=>`<option value="${s.id}" ${String(s.id)===String(x.id)?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`:'')}<div id="detail-anime-episodes" class="anime-episodes"><div class="loading">Loading…</div></div></section>`:''}${type==='tv'&&!x.upcoming?`<section class="season-section">${sectionTitle('Seasons & Episodes','episodes')}<select class="season-select" id="detail-tv-season" aria-label="Season">${d.seasons.map(s=>`<option value="${s.number}">${esc(s.name)}</option>`).join('')}</select><div id="detail-episodes" class="episode-detail-list">Loading…</div></section>`:''}</div>`;
   updateSave(state);
   // The watch button is the next tap nine times out of ten: warm its stream now,
   // in the background, so pressing it opens the player instead of a spinner.
@@ -2218,23 +2223,46 @@ async function nextContinueRecord(record,knownDetail=null,audio='sub'){
  if(!nextDetail?.item||nextDetail.item.upcoming||nextDetail.item.unavailable)return null;
  return {...record,...nextDetail.item,...target,currentTime:0,duration:0};
 }
+let continueMutationBusy=false;
 async function dismissContinue(button){
  const key=button.dataset.dismissContinue,record=continueItems.find(x=>`${x.type}:${x.id}`===key);
- if(!record||button.disabled)return;
+ if(!record||button.disabled||continueMutationBusy)return;
+ continueMutationBusy=true;
  button.disabled=true;button.setAttribute('aria-busy','true');
  try{
   const next=await nextContinueRecord(record);
   const state=await post('/api/history',{...record,dismiss:true,next});
   continueItems=(state.history||[]).slice(0,8);
-  const section=button.closest('.continue-section');
-  if(section?.isConnected){
-   if(continueItems.length)section.querySelector('.continue-grid').outerHTML=continueGrid(continueItems);
-   else section.remove();
-  }
-  toast(next?'Next episode ready at 00:00':'Removed from Continue Watching');
- }catch{button.disabled=false;button.removeAttribute('aria-busy');toast('Could not update Continue Watching. Please try again.');}
+  const section=button.closest('.continue-section'),grid=section?.querySelector('.continue-grid');
+  if(grid?.isConnected)await reconcileContinue(grid,continueItems);
+ }catch{button.disabled=false;button.removeAttribute('aria-busy');}finally{continueMutationBusy=false}
 }
-function continueGrid(data){return `<div class="continue-grid">${data.map(x=>`<article class="continue-card" data-open="/watch/${x.type}/${x.id}?episode=${x.episode}&season=${x.season}"><div class="continue-image"><button type="button" class="continue-dismiss" data-dismiss-continue="${esc(x.type+':'+x.id)}" aria-label="Dismiss ${esc(x.title)} from Continue Watching" title="Dismiss episode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>${x.poster?`<img data-load-whole decoding="async" loading="lazy" src="${safeImage(x.poster)}" alt="${esc(x.title)}">`:''}</div><div class="continue-foot"><div class="continue-progress" style="width:${x.duration?Math.min(100,100*x.currentTime/x.duration):0}%"></div><span>${isFeature(x)?'MOVIE':x.type==='tv'?`S${x.season} E${x.episode}`:`EP ${x.episode}`}</span><span>${x.duration?clock(x.currentTime):'00:00'}</span></div><h3>${esc(x.title)}</h3></article>`).join('')}</div>`}
+async function reconcileContinue(grid,records){
+ const keyOf=x=>`${x.type}:${x.id}`,wanted=new Set(records.map(keyOf));
+ const reduced=reducedMotion(),before=new Map([...grid.children].map(el=>[el,el.getBoundingClientRect()]));
+ const removed=[...grid.children].filter(el=>!wanted.has(el.dataset.continueKey));
+ if(!reduced)await Promise.all(removed.map(el=>el.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.94)'}],{duration:180,easing:'ease-out'}).finished.catch(()=>{})));
+ if(!grid.isConnected)return;
+ removed.forEach(el=>el.remove());
+ const existing=new Map([...grid.children].map(el=>[el.dataset.continueKey,el]));
+ records.forEach((record,index)=>{
+  const key=keyOf(record);let node=existing.get(key);
+  if(node){
+   // Update just the episode/progress metadata, not the cached poster element.
+   node.dataset.open=`/watch/${record.type}/${record.id}?episode=${record.episode}&season=${record.season}`;
+   node.querySelector('.continue-foot').outerHTML=continueFoot(record);
+   node.querySelector('h3').textContent=record.title||'';
+   const button=node.querySelector('button');button.disabled=false;button.removeAttribute('aria-busy');
+  }else node=document.createRange().createContextualFragment(continueCard(record)).firstElementChild;
+  const at=grid.children[index];if(at!==node)grid.insertBefore(node,at||null);
+ });
+ if(!records.length){const section=grid.closest('.continue-section');if(!reduced&&section)await section.animate([{opacity:1,maxHeight:section.scrollHeight+'px'},{opacity:0,maxHeight:'0px'}],{duration:230,easing:'ease',fill:'forwards'}).finished.catch(()=>{});section?.remove();return}
+ if(!reduced)for(const node of grid.children){const old=before.get(node),now=node.getBoundingClientRect();if(old&&(old.left!==now.left||old.top!==now.top))node.animate([{transform:`translate(${old.left-now.left}px,${old.top-now.top}px)`},{transform:'translate(0,0)'}],{duration:300,easing:'cubic-bezier(.2,.7,.2,1)'});else if(!old)node.animate([{opacity:0},{opacity:1}],{duration:240})}
+}
+function continueFoot(x){return `<div class="continue-foot"><div class="continue-progress" style="width:${x.duration?Math.min(100,100*x.currentTime/x.duration):0}%"></div><span>${isFeature(x)?'MOVIE':x.type==='tv'?`S${x.season} E${x.episode}`:`EP ${x.episode}`}</span><span>${x.duration?clock(x.currentTime):'00:00'}</span></div>`}
+function continueCard(x){return `<article class="continue-card" data-continue-key="${esc(x.type+':'+x.id)}" data-open="/watch/${x.type}/${x.id}?episode=${x.episode}&season=${x.season}"><div class="continue-image"><button type="button" class="continue-dismiss" data-dismiss-continue="${esc(x.type+':'+x.id)}" aria-label="Dismiss ${esc(x.title)} from Continue Watching" title="Dismiss episode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>${x.poster?`<img data-load-whole decoding="async" loading="lazy" src="${cardPoster(x)}" data-alt-src="${safeImage(x.poster||'')}" alt="${esc(x.title)}">`:''}</div>${continueFoot(x)}<h3>${esc(x.title)}</h3></article>`}
+
+function continueGrid(data){return `<div class="continue-grid">${data.map(continueCard).join('')}</div>`}
 
 async function watchlist(){
  const route=routeGeneration;
@@ -2269,7 +2297,7 @@ setInterval(()=>{
  });
 },30000);
 
-async function upcomingPage(){const route=routeGeneration;app.innerHTML='<div class="loading">Loading upcoming anime…</div>';document.title='Upcoming anime — KozuTV';try{let d=await get('/api/upcoming');if(route!==routeGeneration)return;let list=(d.items||[]).map(x=>({...x,year:x.releaseDate?String(x.releaseDate).slice(0,4):x.year||'TBA',rating:x.rating??null}));app.innerHTML=`<div class="container content">${sectionTitle('Upcoming anime','calendar','h1')}${list.length?grid(list):'<div class="empty">No upcoming anime right now.</div>'}</div>`}catch(e){if(route===routeGeneration)failure(e)}}
+async function upcomingPage(){const route=routeGeneration;app.innerHTML='<div class="loading">Loading upcoming releases…</div>';document.title='Upcoming — KozuTV';try{let d=await get('/api/upcoming');if(route!==routeGeneration)return;let list=(d.items||[]).map(x=>({...x,year:x.releaseDate?String(x.releaseDate).slice(0,4):x.year||'TBA',rating:x.rating??null}));app.innerHTML=`<div class="container content">${sectionTitle('Upcoming','calendar','h1')}${list.length?grid(list):'<div class="empty">No upcoming releases right now.</div>'}</div>`}catch(e){if(route===routeGeneration)failure(e)}}
 
 const option=(value,label,current)=>`<option value="${value}" ${value===current?'selected':''}>${label}</option>`;
 async function filtersPage(){
@@ -2380,8 +2408,8 @@ function changeWatchlistInstantly(item){
 }
 function reportPage(){
  document.title='Report — KozuTV';
- app.innerHTML=`<div class="container content report-page"><h1>Report</h1><form id="report-form"><label for="report-experienced">Which show you experienced this issue <span aria-hidden="true">*</span></label><input id="report-experienced" name="experienced" type="text" maxlength="300" required><label for="report-episode">Episode and Season of the show</label><input id="report-episode" name="episodeSeason" type="text" maxlength="300"><label for="report-description">Describe the issue</label><textarea id="report-description" name="description" rows="7" maxlength="5000"></textarea><button class="btn" type="submit">Submit</button><p id="report-status" role="status" aria-live="polite"></p></form></div>`;
- const form=document.querySelector('#report-form');form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const button=form.querySelector('button'),status=form.querySelector('#report-status');button.disabled=true;status.textContent='';try{const data=new FormData(form);await postRequest('/api/reports',{experienced:data.get('experienced'),episodeSeason:data.get('episodeSeason'),description:data.get('description')});form.reset();status.textContent='Submitted successfully';}catch{status.textContent='Could not submit. Please try again.'}finally{button.disabled=false}});
+ app.innerHTML=`<div class="container content report-page"><h1>Report</h1><form id="report-form"><label for="report-description">Describe the issue</label><textarea id="report-description" name="description" rows="7" maxlength="5000" required></textarea><button class="btn" type="submit">Submit</button><p id="report-status" role="status" aria-live="polite"></p></form></div>`;
+ const form=document.querySelector('#report-form');form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const button=form.querySelector('button'),status=form.querySelector('#report-status');button.disabled=true;status.textContent='';try{const data=new FormData(form);await postRequest('/api/reports',{description:data.get('description')});form.reset();status.textContent='Submitted successfully';}catch{status.textContent='Could not submit. Please try again.'}finally{button.disabled=false}});
 }
 function render(){
  routeGeneration++;clearTimeout(searchTimer);
@@ -2556,7 +2584,7 @@ function menuEntries(){
   ['/schedule','clock','Schedule'],
   ['/random','shuffle','Random title'],
   ['/filters','sliders','Advanced filters'],
-  ['/upcoming','calendar','Upcoming anime'],
+  ['/upcoming','calendar','Upcoming'],
   ['/settings','settings','Settings'],
   ['/report','warning','Report']
  ];

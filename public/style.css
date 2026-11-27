@@ -721,8 +721,15 @@ a:focus-visible,button:focus-visible,[role="button"]:focus-visible{background-co
 @media(max-width:650px){.report-page h1{font-size:31px;letter-spacing:-.9px}}
 
 /* A quiet dismiss affordance, with a generous touch target and visible focus. */
-.continue-dismiss{position:absolute;top:5px;right:5px;z-index:3;display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:50%;padding:10px;background:transparent;color:rgba(255,255,255,.84);cursor:pointer;filter:drop-shadow(0 1px 3px #000);transition:background .18s,color .18s}
-.continue-dismiss svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
-.continue-dismiss:hover{color:#fff;background:#ffffff1a}
+.continue-dismiss{position:absolute;top:5px;left:5px;z-index:3;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:50%;padding:10px;background:transparent;color:rgba(255,255,255,.84);cursor:pointer;filter:drop-shadow(0 1px 3px #000);transition:background .18s,color .18s,transform .18s,filter .18s}
+.continue-dismiss svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.continue-dismiss:hover,.continue-dismiss:focus-visible{color:var(--orange);background:#ff731c20;filter:drop-shadow(0 0 6px #ff731c70);transform:scale(1.08)}
 .continue-dismiss:focus-visible{outline:2px solid #fff;outline-offset:1px;background:#0005}
 .continue-dismiss:disabled{opacity:.4;cursor:wait}
+
+.continue-section{overflow:hidden}.continue-card{will-change:auto}
+@media(prefers-reduced-motion:reduce){.continue-dismiss{transition:none}.continue-dismiss:hover{transform:none}}
+/* Report #14: the expanded mobile field starts just after the menu hit area. */
+@media(max-width:650px){
+ .header .searchbox.open,.header .searchbox:focus-within{left:40px;right:12px;width:auto;max-width:none;min-width:0;margin-left:0!important}
+}
