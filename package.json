@@ -8,7 +8,8 @@
     "dev": "node --env-file-if-exists=.env server.js",
     "test:viewer": "node scripts/test-viewer-settings.mjs",
     "test:genre": "node scripts/test-genre-cache.mjs",
-    "test": "npm run test:dubs && npm run test:viewer && npm run test:genre && npm run test:ai",
+    "test:history": "node scripts/test-history-audio.mjs",
+    "test": "npm run test:history && npm run test:dubs && npm run test:viewer && npm run test:genre && npm run test:ai",
     "test:ai": "node scripts/test-v5413.mjs",
     "test:dubs": "node scripts/test-v5413d.mjs"
   },

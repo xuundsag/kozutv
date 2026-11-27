@@ -1,6 +1,6 @@
 // kozuTV essential shell only. Images and catalogue API results are deliberately
 // not stored in CacheStorage: large posters rapidly filled mobile storage.
-const VERSION = 'kozutv-v43';
+const VERSION = 'kozutv-v44';
 const SHELL = `${VERSION}-shell`;
 const ESSENTIAL = [
   '/', '/index.html', '/app.js', '/style.css', '/icons.js',

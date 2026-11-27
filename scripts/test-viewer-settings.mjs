@@ -154,6 +154,14 @@ function watchErrors(p,label){p.on('pageerror',e=>errors.push(label+': '+String(
  const pc=await cat.newPage();watchErrors(pc,'browse');await ready(pc,'/browse');await pc.waitForSelector('.hero');
  const firstTitle=await pc.locator('.hero:not(.hero-leaving) h1').innerText();await pc.evaluate(()=>window.__testCarousel());assert.notEqual(await pc.locator('.hero:not(.hero-leaving) h1').innerText(),firstTitle,'carousel advances');
  await pc.evaluate(()=>{localStorage.setItem('kozutv-spotlight-autoplay','false');window.dispatchEvent(new CustomEvent('kozutv-preferences-restored'))});
+ await pc.waitForTimeout(750);
+ for(const index of [2,0,1,2,0]){
+  await pc.locator(`.hero:not(.hero-leaving) [data-slide="${index}"]`).click({force:true});
+  assert.equal(await pc.locator('.hero:not(.hero-leaving)').count(),1);
+  const moving=await pc.locator('.hero-blending').evaluate(el=>({animation:getComputedStyle(el).animationName,transform:getComputedStyle(el).transform}));
+  assert.equal(moving.animation,'heroBlend');assert.equal(moving.transform,'none','spotlight blends without translation');
+ }
+ await pc.waitForTimeout(750);assert.equal(await pc.locator('.hero').count(),1,'rapid reversals leave one slide');
  const pausedTitle=await pc.locator('.hero:not(.hero-leaving) h1').innerText();await pc.evaluate(()=>window.__testCarousel());assert.equal(await pc.locator('.hero:not(.hero-leaving) h1').innerText(),pausedTitle,'carousel paused');
  assert(await pc.evaluate(()=>document.documentElement.classList.contains('spotlight-paused')));await pc.locator('.hero:not(.hero-leaving) .dots [data-slide="0"]').click();assert.equal(await pc.locator('.hero:not(.hero-leaving) h1').innerText(),firstTitle,'manual spotlight selection');
  for(let i=0;i<20;i++){
@@ -194,6 +202,20 @@ function watchErrors(p,label){p.on('pageerror',e=>errors.push(label+': '+String(
  const stoppedAt=emptyRequests;await pe.waitForTimeout(500);assert.equal(emptyRequests,stoppedAt);assert(stoppedAt>=8&&stoppedAt<=24);await empty.close();
  console.log('PASS seeded shuffle and bounded empty-category exhaustion');
 
+ // Dismiss cards through the real history endpoint, preserving the next at zero.
+ const hc=await browser.newContext({viewport:{width:1200,height:900}});await mockApi(hc);
+ const hp=await hc.newPage();watchErrors(hp,'history');await ready(hp);
+ await hp.evaluate(async item=>{await fetch('/api/history',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...item,episode:1,season:1,currentTime:179,duration:180})})},item);
+ await ready(hp,'/browse');await hp.locator('[data-dismiss-continue]').waitFor();
+ for(const expected of [2,3]){
+  await hp.locator('[data-dismiss-continue]').click();
+  await hp.waitForFunction(ep=>{const card=document.querySelector('.continue-card');return card?.dataset.open.includes('episode='+ep)},expected);
+  const record=await hp.evaluate(()=>fetch('/api/state').then(r=>r.json()).then(s=>s.history[0]));
+  assert.equal(record.episode,expected);assert.equal(record.currentTime,0);assert.equal(record.duration,0);
+ }
+ await hp.locator('[data-dismiss-continue]').click();await hp.waitForSelector('.continue-section',{state:'detached'});
+ await hc.close();console.log('PASS card X advances to actual next at zero and removes finished title');
+
  // A real Video.js player with a local 180-second WebM exercises resume, keyboard,
  // pointer double-taps, history posts, episode changes and catalog warning.
  const c=await browser.newContext({viewport:{width:1200,height:900}});await mockApi(c);const p=await c.newPage();watchErrors(p,'player');let posts=0;
@@ -219,6 +241,7 @@ function watchErrors(p,label){p.on('pageerror',e=>errors.push(label+': '+String(
  await p.evaluate(()=>{localStorage.setItem('kozutv-autonext','false');const pl=videojs.getPlayer('kozutv-video');pl.trigger('playing');pl.trigger('timeupdate');pl.trigger('ended')});await p.waitForTimeout(350);assert.equal(posts,0,'history disabled for player events');
  // This also exercises the old-episode snapshot path, which must not post.
  await p.evaluate(()=>videojs.getPlayer('kozutv-video').megaUI.showControls());await p.locator('.mp-next-ep').click({force:true});await p.waitForURL(/episode=2/);await loadVideo(p);await p.waitForTimeout(350);assert.equal(posts,0,'history disabled while switching episodes');
+ await p.evaluate(()=>videojs.getPlayer('kozutv-video').megaUI.openSettings('quality'));assert.equal(await p.locator('.mp-server-section').isVisible(),false,'anime hides server selector');
  let st=await p.evaluate(()=>fetch('/api/state').then(r=>r.json()));assert.equal(st.history[0].currentTime,60);assert.equal(st.history[0].episode,1);
  let dialogs=0;p.on('dialog',async d=>{dialogs++;await d.dismiss()});await p.evaluate(()=>videojs.getPlayer('kozutv-video').megaUI.openSettings('audio'));await p.locator('[data-audio-choice="dub"]').click();await p.waitForURL(/episode=1&lang=dub/);await loadVideo(p);assert.equal(dialogs,0,'catalog switch is silent');assert.equal(await p.locator('.mp-notice:visible').count(),0);
  // Switch resume/history back on through the viewer settings, retaining the old 60-second position.

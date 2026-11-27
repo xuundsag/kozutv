@@ -4,7 +4,7 @@
 // Heading glyphs: the original V5.4.13 stroke icons, kept only for section
 // titles so headings look exactly as they did before the flat icon pass.
 const HEADING_ICONS={
- similar:'<rect x="2.5" y="6" width="12" height="15" rx="2"/><path d="M8 6V4.8A2.3 2.3 0 0 1 10.3 2.5h8.4A2.3 2.3 0 0 1 21 4.8v11.4a2.3 2.3 0 0 1-2.3 2.3H14.5"/><path d="m7 10 4 3.5L7 17z"/>',
+ similar:'<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>',
  sparkles:'<path d="m12 3 1.3 3.7L17 8l-3.7 1.3L12 13l-1.3-3.7L7 8l3.7-1.3ZM5 14l.9 2.1L8 17l-2.1.9L5 20l-.9-2.1L2 17l2.1-.9ZM18 14l.9 2.1L21 17l-2.1.9L18 20l-.9-2.1L15 17l2.1-.9Z"/>',
  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>',

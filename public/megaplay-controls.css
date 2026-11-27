@@ -1,5 +1,6 @@
 /* MegaPlay-style controls for kozuTV's Video.js player. */
 .mp-host {
+  container-type: inline-size;
   --mp-subtitle-color: #fff;
   --mp-subtitle-scale: 1;
   --mp-subtitle-background: rgba(0, 0, 0, 0);
@@ -435,7 +436,7 @@
   align-items: center;
   gap: var(--mp-subtitle-gap);
   font-family: var(--mp-subtitle-font);
-  font-size: calc(clamp(14px, 2.5vw, 28px) * var(--mp-subtitle-scale));
+  font-size: calc(clamp(13px, 2.2cqw, 23px) * var(--mp-subtitle-scale));
   line-height: var(--mp-subtitle-line-height);
   text-align: center;
   transition: bottom .18s ease;
@@ -695,7 +696,7 @@
   .mp-ui:not(.mp-is-fullscreen) .mp-next-ep { right: 10px; }
   .mp-ui:not(.mp-is-fullscreen) .mp-prev-ep svg,
   .mp-ui:not(.mp-is-fullscreen) .mp-next-ep svg { width: 20px; height: 20px; }
-  .mp-captions { left: 5%; right: 5%; bottom: 48px; font-size: calc(clamp(12.5px, 3.8vw, 19px) * var(--mp-subtitle-scale)); }
+  .mp-captions { left: 5%; right: 5%; bottom: 48px; font-size: calc(clamp(12px, 3.5cqw, 18px) * var(--mp-subtitle-scale)); }
   .mp-ui[data-active="false"] .mp-captions { bottom: 12px; }
   .mp-skip { right: 12px; bottom: 56px; padding: 7px 12px; font-size: 12.5px; }
 
@@ -790,3 +791,6 @@
 /* V34: modestly thicker seekbar and solid playhead. */
 .mp-ui .mp-seek-rail,.mp-ui .mp-seek-area:hover .mp-seek-rail,.mp-ui[data-scrubbing="true"] .mp-seek-rail{top:5px;height:5px}
 .mp-ui .mp-seek-dot{border:0}
+
+.mp-audio-status{padding:12px 16px;color:#a6a8b2;font-size:12px;line-height:1.5}
+.mp-server-section[hidden]{display:none!important}

@@ -6,6 +6,7 @@
 // 5. vidsrc    -> VidSrc    (vidup.to 4K/1080p/720p H.264 + Hexa 1080p/720p H.264 + Vidora HD)
 
 import crypto from 'node:crypto';
+import { AUDIO_LANGUAGE_NAMES, REGIONAL_AUDIO_LANGUAGES } from './audio-languages.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36';
 
@@ -71,6 +72,7 @@ const langDisplay = (() => {
 })();
 
 const LANG_FALLBACK = {
+  ...AUDIO_LANGUAGE_NAMES,
   en: 'English', eng: 'English', hi: 'Hindi', hin: 'Hindi', ko: 'Korean', kor: 'Korean',
   ja: 'Japanese', jpn: 'Japanese', es: 'Spanish', spa: 'Spanish', fr: 'French', fra: 'French', fre: 'French',
   de: 'German', deu: 'German', ger: 'German', it: 'Italian', ita: 'Italian', pt: 'Portuguese', por: 'Portuguese',
@@ -877,6 +879,9 @@ function nxDecrypt(hashStr) {
   return JSON.parse(plain);
 }
 
+let regionalBlockedAt=0;
+export const regionalAudioStatus=()=>Date.now()-regionalBlockedAt<60000?'blocked':'ready';
+
 async function fetchEmbedWaveSourcesForScraper(scraper, input, meta = {}) {
   const payload = {
     provider: scraper,
@@ -892,8 +897,8 @@ async function fetchEmbedWaveSourcesForScraper(scraper, input, meta = {}) {
   const q = encodeURIComponent(nxEncrypt(payload));
   const raw = await fetchJsonSafe(`https://web.nxsha.app/api/sources?q=${q}`, {
     headers: { Referer: embedRef, Origin: 'https://web.nxsha.app' },
-    timeout: 3500
-  }).catch(() => null);
+    timeout: 7000
+  }).catch(error => {if(error?.status===403||error?.status===429)regionalBlockedAt=Date.now();return null});
   const dec = raw?._hash ? nxDecrypt(raw._hash) : null;
   return Array.isArray(dec?.sources) ? dec.sources : [];
 }
@@ -1039,7 +1044,7 @@ async function fetchEmbedWaveBundle(input, meta = {}) {
   // Query Indian & multi-language scrapers concurrently: castle + awsind + nitro + mahalala cover 80–100% of shows & movies with clean Hindi audio!
   const scrapers = ['castle', 'awsind', 'nitro', 'mahalala', 'watchout', 'purstream', 'bdxs', 'rive-citadel'];
   const rawLists = await Promise.all(
-    scrapers.map(sc => fetchEmbedWaveSourcesForScraper(sc, input, meta).then(list => list.map(item => ({ ...item, _scraper: sc }))))
+    scrapers.map(sc => fetchEmbedWaveSourcesForScraper(sc, input, meta).then(list => list.map(item => ({ ...item, _scraper: sc }))).catch(()=>[]))
   );
   let allRaw = rawLists
     .flat()
@@ -2764,7 +2769,13 @@ export async function resolveOttWithFallback(input, requestedProvider = DEFAULT_
       const primaryAudio = await inferPrimaryAudio(value, meta);
       value.audioLang = primaryAudio.code;
       value.audioLabel = primaryAudio.label;
-      if (Array.isArray(value.audioStreams) && value.audioStreams.length) {
+      if (!Array.isArray(value.audioStreams)) value.audioStreams=[];
+      if (!value.audioStreams.some(a=>a.url===value.url && !a.audioLang)) {
+        value.audioStreams.unshift({language:primaryAudio.code,label:primaryAudio.label,url:value.url,
+          kind:value.kind||'hls',codec:value.codec||'h264',durationSec:value.durationSec,
+          proxyProvider:value.proxyProvider||value.sourceKey||'vidcore',headers:value.headers||{}});
+      }
+      if (value.audioStreams.length) {
         for (const a of value.audioStreams) {
           if (a.url === value.url && !a.audioLang) { a.language = primaryAudio.code; a.label = primaryAudio.label; }
         }
@@ -2803,29 +2814,35 @@ const animeRegionalInflight = new Map();
 // Urdu and Gujarati were being *recognised* by cleanLanguageOnlyLabel but never
 // requested, which is why a track could sit in the master and never appear in
 // the menu.
-const REGIONAL_ANIME_WANTED = [
-  ['hi', 'Hindi'],
-  ['ta', 'Tamil'],
-  ['te', 'Telugu'],
-  ['ml', 'Malayalam'],
-  ['kn', 'Kannada'],
-  ['bn', 'Bengali'],
-  ['mr', 'Marathi'],
-  ['pa', 'Punjabi'],
-  ['gu', 'Gujarati'],
-  ['ur', 'Urdu'],
-  ['zh', 'Chinese'],
-  ['yue', 'Cantonese']
-];
+const REGIONAL_ANIME_WANTED = REGIONAL_AUDIO_LANGUAGES;
 const REGIONAL_ANIME_LABEL_SET = REGIONAL_ANIME_WANTED.map(([, label]) => label);
 const REGIONAL_ANIME_LABELS = new Set(REGIONAL_ANIME_LABEL_SET);
-// Everything the upstream tags as Chinese (Mandarin, Cantonese, 中文, zh-CN) feeds
-// the same bucket: only one Chinese dub can be pinned per stream anyway.
+// Recognise both Chinese variants without merging their audio identities.
 const CHINESE_LANG_LABELS = new Set(['Chinese', 'Mandarin', 'Cantonese', 'Chinese (Mandarin)', 'Chinese (Cantonese)']);
 
 export const _testLangs={cleanLanguageOnlyLabel,normalizeAudioLangCode,REGIONAL_ANIME_WANTED,REGIONAL_ANIME_LABELS,CHINESE_LANG_LABELS};
 export const _dbgClean=cleanLanguageOnlyLabel;
 export const _dbgParse=parseEmbeddedHlsAudioLanguages;
+export function regionalVariantsFromResolved(value,input,meta={},expectedDurationSec=0){
+ const seen=new Set(),out=[];
+ for(const track of value?.audioStreams||[]){
+  const parsed=cleanLanguageOnlyLabel(track.label,track.language||track.audioLang,meta.originalLanguage||'ja');
+  if(!parsed||!REGIONAL_ANIME_WANTED.some(([code])=>code===parsed.code)||seen.has(parsed.code)||!track.url)continue;
+  const sameMaster=track.url===value.url;
+  if(expectedDurationSec>300){
+   const duration=Number(track.durationSec||value.durationSec),tolerance=Math.max(110,expectedDurationSec*.055);
+   if(!(duration>0)||![1,25/23.976023976,23.976023976/25].some(ratio=>Math.abs(duration-expectedDurationSec*ratio)<=tolerance))continue;
+  }
+  if(!sameMaster&&!verifyDubDurationMatch(track.durationSec,value.durationSec,input,meta,track._scraper||''))continue;
+  seen.add(parsed.code);out.push({...track,key:parsed.code,language:parsed.code,label:parsed.label,
+   proxyProvider:track.proxyProvider||value.proxyProvider||value.sourceKey||'vidcore'});
+ }
+ return out;
+}
+async function regionalFromExistingServers(input,meta,expectedDurationSec){
+ const resolved=await resolveOttWithFallback(input,'vidcore',async()=>meta).catch(()=>null);
+ return regionalVariantsFromResolved(resolved,input,meta,expectedDurationSec);
+}
 export async function resolveAnimeRegionalAudio(input, meta = {}, expectedDurationSec = 0) {
   const pathKey = `anime-reg:${mediaPathFor(input)}`;
   const hit = animeRegionalCache.get(pathKey);
@@ -2844,9 +2861,7 @@ export async function resolveAnimeRegionalAudio(input, meta = {}, expectedDurati
       .filter(s => s?.url && !s.isEmbed && s.type !== 'embed' && /^https:\/\//i.test(s.url) && !isLockerUrl(s.url));
 
     if (!allRaw.length) {
-      // One provider hiccup must not hide every dub for the next 45 s, so an
-      // empty scrape is retried on the next request instead of being cached.
-      return [];
+      return regionalFromExistingServers(input,meta,expectedDurationSec);
     }
 
     const langCandidates = new Map();
@@ -2875,7 +2890,7 @@ export async function resolveAnimeRegionalAudio(input, meta = {}, expectedDurati
       if (!parsedLang || parsedLang.code === origBase || parsedLang.code === 'en' || /multi/i.test(rawDesc)) {
         if (!isHevc && s._scraper !== 'nitro' && !primaryCandidates.some(p => p.url === entry.url)) primaryCandidates.push(entry);
       }
-      const bucketLabel = parsedLang && CHINESE_LANG_LABELS.has(parsedLang.label) ? 'Chinese' : parsedLang?.label;
+      const bucketLabel = parsedLang?.code==='yue'?'Cantonese':parsedLang && CHINESE_LANG_LABELS.has(parsedLang.label) ? 'Chinese' : parsedLang?.label;
       if (bucketLabel && REGIONAL_ANIME_LABELS.has(bucketLabel)) {
         const bucket = langCandidates.get(bucketLabel) || [];
         if (!bucket.some(b => b.url === entry.url)) bucket.push(entry);
@@ -2928,21 +2943,15 @@ export async function resolveAnimeRegionalAudio(input, meta = {}, expectedDurati
       if (res) probedMap.set(c.url, res);
       return res;
     });
-    // Wait for the whole field, but only for a bounded window. Every probe has
-    // its own retry budget, so what is left here is the slow tail: a candidate
-    // that answered late still lands in probedMap for the next request, it just
-    // does not get to decide when this one returns.
-    const deadline = new Promise(res => setTimeout(res, 5200));
-    await Promise.race([Promise.allSettled(probeAll), deadline]);
-    probeAll.forEach(p => p.catch(() => {}));
-    // Anything that answered after the deadline still lands in probedMap for the
-    // next (cached) request; nothing here is thrown away, it is just not waited on.
+    // Each network operation already has its own timeout. Wait for all probes:
+    // work left running after an HTTP response can be frozen by serverless hosts.
+    await Promise.allSettled(probeAll);
 
     for (const c of [...multiMasterCandidates, ...primaryCandidates]) {
       const live = probedMap.get(c.url);
       if (!live?.embeddedAudio?.length) continue;
       for (const emb of live.embeddedAudio) {
-        const embLabel = CHINESE_LANG_LABELS.has(emb.label) ? 'Chinese' : emb.label;
+        const embLabel = emb.code==='yue'?'Cantonese':CHINESE_LANG_LABELS.has(emb.label) ? 'Chinese' : emb.label;
         if (!REGIONAL_ANIME_LABELS.has(embLabel)) continue;
         const bucket = langCandidates.get(embLabel) || [];
         if (!bucket.some(b => b.url === c.url && (b.audioLang || '') === emb.code)) {
@@ -2954,7 +2963,7 @@ export async function resolveAnimeRegionalAudio(input, meta = {}, expectedDurati
           });
         }
         bucket.sort((a, b) => b.tierHint - a.tierHint);
-        langCandidates.set(emb.label, bucket);
+        langCandidates.set(embLabel, bucket);
       }
     }
 
@@ -3009,6 +3018,8 @@ export async function resolveAnimeRegionalAudio(input, meta = {}, expectedDurati
         headers: live.headers || {}
       });
     }
+
+    if(!results.length)results.push(...await regionalFromExistingServers(input,meta,expectedDurationSec));
 
     // Never cache an empty answer: a flaked probe would otherwise stick and
     // the player would keep showing "no languages" for a feed that has them.

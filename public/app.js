@@ -12,7 +12,7 @@ let playerAssetsPromise=null;
 function loadPlayerAssets(){
  if(window.videojs&&window.MegaPlayUI)return Promise.resolve();
  if(!playerAssetsPromise)playerAssetsPromise=(async()=>{
-  for(let src of ['/vendor/video.min.js','/megaplay-controls.js?v=5.4.19-v43'])await new Promise((resolve,reject)=>{
+  for(let src of ['/vendor/video.min.js','/megaplay-controls.js?v=5.4.19-v44'])await new Promise((resolve,reject)=>{
    let script=document.createElement('script');script.src=src;script.async=true;script.onload=resolve;
    script.onerror=()=>{script.remove();reject(Error('The player assets could not be loaded.'))};
    document.head.append(script);
@@ -23,16 +23,16 @@ function loadPlayerAssets(){
 
 const DEFAULT_DOC_TITLE='KozuTV - Watch Free Anime, Movies & Series Online in HD Sub & Dub';
 const OTT_PROVIDERS=['vidcore','embedwave','cinesrc','vidlink','vidsrc'];
-const ANIME_LANGS=['sub','dub','hi','ta','te','ml','kn','bn'];
-const ANIME_REGIONAL_LANGS=['hi','ta','te','ml','kn','bn'];
 const animeCatalogBucket=value=>ANIME_REGIONAL_LANGS.includes(value)?'reg':value;
 const animeNeedsEpisodeOne=(item,from,to)=>Boolean(item?.differentDubOrder&&animeCatalogBucket(from)!==animeCatalogBucket(to));
 const animeFallbackOrder=first=>[...new Set([first,'dub','sub'].filter(value=>ANIME_LANGS.includes(value)))];
 const newAnimePlan=(from,ep)=>({originLang:from,originEpisode:ep,order:animeFallbackOrder(from),tried:[]});
 // Normalize only known audio languages; an unknown stream is never renamed as
 // the preference. Direct source variants can be chosen before playback starts.
-const OTT_AUDIO_NAMES={en:'English',ja:'Japanese',hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',bn:'Bengali',ko:'Korean',es:'Spanish',fr:'French',de:'German',it:'Italian',pt:'Portuguese',ru:'Russian',zh:'Chinese',ar:'Arabic',tr:'Turkish',th:'Thai',vi:'Vietnamese',id:'Indonesian',mr:'Marathi',pa:'Punjabi',gu:'Gujarati',ur:'Urdu',nl:'Dutch',pl:'Polish',sv:'Swedish',da:'Danish',fi:'Finnish',cs:'Czech',el:'Greek',hu:'Hungarian',ro:'Romanian',uk:'Ukrainian',he:'Hebrew',fa:'Persian',ms:'Malay'};
-const OTT_AUDIO_ALIASES={eng:'en',jpn:'ja',hin:'hi',tam:'ta',tel:'te',mal:'ml',kan:'kn',ben:'bn',kor:'ko',spa:'es',fra:'fr',fre:'fr',deu:'de',ger:'de',ita:'it',por:'pt',rus:'ru',zho:'zh',chi:'zh',ara:'ar',tur:'tr',tha:'th',vie:'vi',ind:'id',mar:'mr',pan:'pa',guj:'gu',urd:'ur'};
+const OTT_AUDIO_NAMES={en:'English',ja:'Japanese',hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',bn:'Bengali',ko:'Korean',es:'Spanish',fr:'French',de:'German',it:'Italian',pt:'Portuguese',ru:'Russian',zh:'Chinese',ar:'Arabic',tr:'Turkish',th:'Thai',vi:'Vietnamese',id:'Indonesian',mr:'Marathi',pa:'Punjabi',gu:'Gujarati',ur:'Urdu',nl:'Dutch',pl:'Polish',sv:'Swedish',da:'Danish',fi:'Finnish',cs:'Czech',el:'Greek',hu:'Hungarian',ro:'Romanian',uk:'Ukrainian',he:'Hebrew',fa:'Persian',ms:'Malay',yue:'Cantonese',no:'Norwegian',si:'Sinhala',ne:'Nepali',sw:'Swahili',fil:'Filipino',sk:'Slovak',bg:'Bulgarian',hr:'Croatian',sr:'Serbian',bs:'Bosnian',sl:'Slovenian'};
+const ANIME_REGIONAL_LANGS=Object.keys(OTT_AUDIO_NAMES).filter(key=>!['en','ja'].includes(key));
+const ANIME_LANGS=['sub','dub',...ANIME_REGIONAL_LANGS];
+const OTT_AUDIO_ALIASES={eng:'en',jpn:'ja',hin:'hi',tam:'ta',tel:'te',mal:'ml',kan:'kn',ben:'bn',yue:'yue',cmn:'zh',kor:'ko',spa:'es',fra:'fr',fre:'fr',deu:'de',ger:'de',ita:'it',por:'pt',rus:'ru',zho:'zh',chi:'zh',ara:'ar',tur:'tr',tha:'th',vie:'vi',ind:'id',mar:'mr',pan:'pa',guj:'gu',urd:'ur'};
 function ottAudioCode(track){
  const raw=String(track?.language||'').trim().toLowerCase().split(/[-_]/)[0];
  if(OTT_AUDIO_NAMES[raw])return raw;if(OTT_AUDIO_ALIASES[raw])return OTT_AUDIO_ALIASES[raw];
@@ -866,10 +866,8 @@ function nav(path){
 function card(x){return `<article class="card" data-open="${url(x.type,x.id)}"><div class="poster"><img data-load-whole decoding="async" loading="lazy" src="${safeImage(x.poster||x.backdrop)||FALLBACK_POSTER_DATA_URI}" data-alt-src="${safeImage(x.backdrop||'')}" alt="${esc(x.title)}">${x.rating?`<span class="rating">${metaIco('star')}${esc(x.rating)}</span>`:''}${x.upcoming?'<span class="badge badge-upcoming">Upcoming</span>':''}</div><h3 title="${esc(x.title)}">${esc(x.title)}</h3><p>${esc(x.year||'New')} &nbsp;·&nbsp; ${x.type==='anime'?(x.isMovie?'Anime Movie':'Anime Series'):x.type==='tv'?'TV Series':'Movie'}</p></article>`}
 function grid(data,idAttr=''){return data.length?`<div class="grid"${idAttr?` id="${idAttr}"`:''}>${data.map(card).join('')}</div>`:'<div class="empty">No titles found.</div>'}
 
-function hero(data){
- let x=data[slide%data.length];if(!x)return '';
- let feature=isFeature(x),key=x.type+':'+x.id,saved=savedKeys.has(key);
- let watch=`/watch/${x.type}/${x.id}${feature?'':'?season=1&episode=1'}`;
+function spotlightArt(x){
+ const key=x.type+':'+x.id;
  const firstImage=(...list)=>{for(const c of list){const v=safeImage(c||'');if(v)return v}return ''};
  let art=firstImage(x.backdrop,x.poster,spotlightPortraits[key]);
  // The phone banner falls back through the same list: ending on placeholder
@@ -880,8 +878,29 @@ function hero(data){
  // Worst case the phone shows the sharp backdrop rather than placeholder art.
  let mobileArt=firstImage(x.spotlightHighRes,x.spotlightBanner,portrait,x.backdrop,x.poster)||art;
  // Spotlight keeps type, year, quality and rating only - no genre text.
+ return {art,mobileArt};
+}
+const spotlightPreloads=new Map();
+function preloadSpotlights(){
+ const sources=[...new Set(spotlightItems.flatMap(x=>{const a=spotlightArt(x);return [a.art,a.mobileArt]}).filter(Boolean))];
+ for(const key of spotlightPreloads.keys())if(!sources.includes(key))spotlightPreloads.delete(key);
+ for(const src of sources){
+  if(spotlightPreloads.has(src))continue;
+  const img=new Image();img.decoding='async';img.fetchPriority='low';
+  const ready=new Promise(resolve=>{img.onload=()=>{img.decode?.().catch(()=>{}).finally(resolve)||resolve()};img.onerror=()=>{spotlightPreloads.delete(src);resolve()}});
+  spotlightPreloads.set(src,{img,ready});
+  // safeImage returns HTML-safe URLs. DOM properties need their literal form.
+  img.src=src.replace(/&amp;/g,'&').replace(/&#39;/g,"'").replace(/&quot;/g,'"');
+ }
+}
+
+function hero(data){
+ let x=data[slide%data.length];if(!x)return '';
+ let feature=isFeature(x),key=x.type+':'+x.id,saved=savedKeys.has(key);
+ let watch=`/watch/${x.type}/${x.id}${feature?'':'?season=1&episode=1'}`;
+ const {art,mobileArt}=spotlightArt(x);
  const genreSummary='';
- return `<section class="hero" data-hero-details="${url(x.type,x.id)}"><img class="hero-image" loading="lazy" src="${art||FALLBACK_STILL_DATA_URI}" data-alt-src="${safeImage(x.poster||'')}" alt="" fetchpriority="high" decoding="async"><img class="hero-image-mobile" loading="lazy" src="${mobileArt||FALLBACK_POSTER_DATA_URI}" data-alt-src="${safeImage(x.spotlightBanner||spotlightPortraits[key]||x.backdrop||'')}" alt="" fetchpriority="high" decoding="async"><div class="container hero-content"><div class="hero-copy"><h1><a href="${url(x.type,x.id)}">${esc(x.title)}</a></h1><div class="meta hero-meta"><span>${metaIco(x.type==='anime'?(feature?'film':'tv'):x.type==='tv'?'tv':'film')}${x.type==='anime'?(feature?'Anime Movie':'Anime'):x.type==='tv'?'Web Series':'Movie'}</span>${genreSummary}${x.year?`<span>${metaIco('calendar')}${esc(x.year)}</span>`:''}<span class="quality">HD</span>${x.rating?`<span>${metaIco('star')}${esc(x.rating)}</span>`:''}</div><p class="description">${esc(short(x.description||'',220))}</p><div class="hero-actions"><button class="btn hero-watch" data-open="${watch}">${ico('play')}<span>Start Watching${feature?'':' E1'}</span></button><button class="hero-save ${saved?'saved':''}" type="button" data-hero-save="${key}" aria-label="${saved?'Remove from':'Add to'} Watchlist" aria-pressed="${saved?'true':'false'}" title="Watchlist">${headIcon('bookmark')}</button></div></div><div class="dots">${data.slice(0,6).map((_,i)=>`<button data-slide="${i}" class="${i===slide?'active':''}" aria-label="Spotlight ${i+1}"></button>`).join('')}</div></div></section>`;
+ return `<section class="hero" data-hero-details="${url(x.type,x.id)}"><img class="hero-image" loading="eager" src="${art||FALLBACK_STILL_DATA_URI}" data-alt-src="${safeImage(x.poster||'')}" alt="" fetchpriority="high" decoding="async"><img class="hero-image-mobile" loading="eager" src="${mobileArt||FALLBACK_POSTER_DATA_URI}" data-alt-src="${safeImage(x.spotlightBanner||spotlightPortraits[key]||x.backdrop||'')}" alt="" fetchpriority="high" decoding="async"><div class="container hero-content"><div class="hero-copy"><h1><a href="${url(x.type,x.id)}">${esc(x.title)}</a></h1><div class="meta hero-meta"><span>${metaIco(x.type==='anime'?(feature?'film':'tv'):x.type==='tv'?'tv':'film')}${x.type==='anime'?(feature?'Anime Movie':'Anime'):x.type==='tv'?'Web Series':'Movie'}</span>${genreSummary}${x.year?`<span>${metaIco('calendar')}${esc(x.year)}</span>`:''}<span class="quality">HD</span>${x.rating?`<span>${metaIco('star')}${esc(x.rating)}</span>`:''}</div><p class="description">${esc(short(x.description||'',220))}</p><div class="hero-actions"><button class="btn hero-watch" data-open="${watch}">${ico('play')}<span>Start Watching${feature?'':' E1'}</span></button><button class="hero-save ${saved?'saved':''}" type="button" data-hero-save="${key}" aria-label="${saved?'Remove from':'Add to'} Watchlist" aria-pressed="${saved?'true':'false'}" title="Watchlist">${headIcon('bookmark')}</button></div></div><div class="dots">${data.slice(0,6).map((_,i)=>`<button data-slide="${i}" class="${i===slide?'active':''}" aria-label="Spotlight ${i+1}"></button>`).join('')}</div></div></section>`;
 }
 
 async function catalog(isSearch=false){
@@ -1019,27 +1038,23 @@ function startBrowseRows(){
  append();session.sentinelObserver.observe(sentinel);
 }
 
-// A Spotlight slide transition keeps the outgoing and incoming slides in a
-// clipped stage. Pointer swipes deliberately follow kozuTV's requested
-// direction: left = previous; right = next.
-let heroGesture=null,suppressHeroClickUntil=0,suppressHeroPoint=null;
+// Both directions use the same quiet, opacity-only blend. Preload every hero
+// while the current one is on screen; navigation never waits for an image fetch.
+let heroGesture=null,suppressHeroClickUntil=0,suppressHeroPoint=null,heroTransitionTimer=null;
 function reducedMotion(){return readPreference('kozutv-reduce-motion','false')==='true'||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches}
-function showSlide(next,direction=1){
+function showSlide(next){
  const stage=document.querySelector('.hero-stage'),current=stage?.querySelector('.hero:not(.hero-leaving)');
  if(!current||!spotlightItems.length)return;
  const count=spotlightItems.length,index=((next%count)+count)%count;if(index===slide)return;
+ clearTimeout(heroTransitionTimer);
  stage.querySelectorAll('.hero-leaving').forEach(el=>el.remove());
- slide=index;
- const frag=document.createRange().createContextualFragment(hero(spotlightItems)),incoming=frag.firstElementChild;
+ current.classList.remove('hero-blending');slide=index;
+ const incoming=document.createRange().createContextualFragment(hero(spotlightItems)).firstElementChild;
  if(reducedMotion()){current.replaceWith(incoming);return}
- // direction +1 = "next": the incoming slide arrives from the RIGHT and the
- // outgoing slide leaves to the LEFT, so content travels the same way the user
- // is moving through the list. direction -1 = "previous" mirrors that.
- current.classList.add('hero-leaving',direction<0?'hero-leave-right':'hero-leave-left');
+ current.classList.add('hero-leaving');
  current.setAttribute('aria-hidden','true');current.setAttribute('inert','');
- incoming.classList.add(direction<0?'hero-enter-left':'hero-enter-right');
- stage.append(incoming);
- setTimeout(()=>{current.remove();incoming.classList.remove('hero-enter-right','hero-enter-left')},470);
+ incoming.classList.add('hero-blending');stage.append(incoming);
+ heroTransitionTimer=setTimeout(()=>{current.remove();incoming.classList.remove('hero-blending')},720);
 }
 document.addEventListener('pointerdown',event=>{
  const hero=event.target.closest?.('.hero:not(.hero-leaving)');
@@ -1052,11 +1067,6 @@ document.addEventListener('pointerup',event=>{
  const dx=event.clientX-heroGesture.x,dy=event.clientY-heroGesture.y;heroGesture=null;
  if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.35)return;
  suppressHeroClickUntil=performance.now()+500;suppressHeroPoint={x:event.clientX,y:event.clientY};
- // FIXED (v6b): a swipe left advances to the NEXT slide and the new slide must
- // travel in from the RIGHT (direction +1 -> hero-enter-right / hero-leave-left),
- // matching the finger. Swiping right goes back and comes in from the left.
- // The old call passed direction = the same sign as dx, which sent the incoming
- // slide in from the side the finger came from - the "inverted" motion.
  showSlide(slide+(dx<0?1:-1),dx<0?1:-1);
 });
 document.addEventListener('click',event=>{
@@ -1080,6 +1090,7 @@ function drawCatalog(filtered=false,term='',isGenre=false){
  let headingText=filtered?(isGenre?term:`Results for “${term}”`):'Trending Now';
  let headingTag=filtered?'h1':'h2';
  app.innerHTML=`${!filtered&&spotlightItems.length?`<div class="hero-stage">${hero(spotlightItems)}</div>`:''}<div class="container content">${continueSection}${sectionTitle(headingText,headingIcon,headingTag)}${isGenrePage?'<div id="genre-pages"></div><div id="genre-sentinel" class="genre-sentinel" aria-live="polite"></div>':grid(data,filtered?'paged-grid':'trending-grid')}${!filtered&&suggestions.length?`<section class="suggestions">${sectionTitle('Suggested for you','sparkles')}${grid(suggestions)}</section>`:''}${categories}${moreResults}</div>`;
+ if(!filtered)preloadSpotlights();
 }
 
 // Genre pages keep only a small LRU of item records and nearby card DOM. Each
@@ -1284,7 +1295,8 @@ async function loadWatchEpisodes(id,number,active){return loadTvEpisodes('watch'
 
 function watchlistButton(){return `<button class="btn secondary" data-save>${ico('plus')}<span class="desktop-action">Add to Watchlist</span><span class="mobile-action">Add</span></button>`}
 
-function episodeTargets(){
+function episodeTargets(){return targetsForEpisode(detail,episode,season,lang)}
+function targetsForEpisode(detail,episode,season,lang){
  if(!detail||isFeature(detail.item))return {prev:null,next:null};let x=detail.item;
  if(x.type==='anime'){
   let seasons=Array.isArray(detail.seasons)?detail.seasons:[],count=effectiveAnimeEpisodeCount(x,lang),own=n=>({type:'anime',id:x.id,season:1,episode:n});
@@ -1602,7 +1614,7 @@ function syncWatchEpisodePanel(rebuild=false){
   }else loadAnimeEpisodes(x.id,'watch',page,episode,true,rs?rs.startEp:0,rs?.endEp||0);
  }
 }
-async function switchWatchEpisode(target,{historyMode='push',nextLang='',nextProvider='',resolvedPayload=null}={}){
+async function switchWatchEpisode(target,{historyMode='push',nextLang='',nextProvider='',resolvedPayload=null,skipSave=false}={}){
  const container=document.querySelector('#player');
  if(!target||!container||!detail?.item)return;
  const token=++episodeSwitchGeneration,oldItem=detail.item;
@@ -1615,7 +1627,7 @@ async function switchWatchEpisode(target,{historyMode='push',nextLang='',nextPro
  }
  // Snapshot the old coordinates before changing globals, so history never records
  // the old playback position against the new episode.
- if(videoPlayer&&!videoPlayer.isDisposed?.()){
+ if(!skipSave&&videoPlayer&&!videoPlayer.isDisposed?.()){
   try{saveHistory({...oldItem,episode,season,currentTime:videoPlayer.currentTime()||0,duration:videoPlayer.duration()||0})}catch{}
  }
  const changedTitle=String(target.id)!==String(oldItem.id)||target.type!==oldItem.type;
@@ -1798,7 +1810,8 @@ async function play(x,state=null,attempts=null){
   videoPlayer=player;
   try{player.tech({}).el().setAttribute('disableremoteplayback','')}catch{}
   player.src({src:d.src,type:d.type||'application/x-mpegURL'});
-  let save=(current=0,duration=0)=>saveHistory({...x,episode:playingEpisode,season:playingSeason,currentTime:current,duration});
+  let historyCompleted=false;
+  let save=(current=0,duration=0)=>historyCompleted?Promise.resolve():saveHistory({...x,episode:playingEpisode,season:playingSeason,currentTime:current,duration});
   let targets=episodeTargets();
   syncMediaSession(x,playingEpisode,playingSeason);
   player.on('timeupdate',()=>{if(player.currentTime()>=1)syncMediaSession(x,playingEpisode,playingSeason)});
@@ -1818,7 +1831,7 @@ async function play(x,state=null,attempts=null){
     savePreference('kozutv-anime-lang',value);
     if(value===lang)return;
     save(player.currentTime(),player.duration());
-    const requestedOrder=animeFallbackOrder(value),failed=[];
+    const requestedOrder=[value],failed=[];
     for(const nextLang of requestedOrder){
      if(token!==audioRequest||generation!==playGeneration)return;
      const crossing=animeNeedsEpisodeOne(x,lang,nextLang);
@@ -1860,7 +1873,8 @@ async function play(x,state=null,attempts=null){
       failed.push(nextLang);
      }
     }
-    // The previous source remains selected when all alternate tracks fail.
+    // Keep the old, working source instead of pretending a fallback is the selected dub.
+    toast(`${OTT_AUDIO_NAMES[value]||value} audio is unavailable for this episode right now.`);
    },
    onServerChange:value=>{save(player.currentTime(),player.duration());provider=value;routeGo(watchUrl(),'','replace');play(x)},
    // Downloads: the player shows the button only when the app bridge is there.
@@ -1872,16 +1886,23 @@ async function play(x,state=null,attempts=null){
   // a "dub" variant already existed is exactly why Naruto listed only Japanese and
   // English - an existing English track used to short-circuit the whole probe.
   if(isAnime){
-   get(`/api/anime-audio?id=${x.id}&episode=${playingEpisode}&anilistId=${x.anilistId||''}`).then(res=>{
-    if(generation!==playGeneration)return;
-    // The language list is truth even when no regional stream is found: it says
-    // what the source carries, so the menu can show all of it from the start.
-    if(Array.isArray(res?.availableLangs)&&res.availableLangs.length)
-     ui?.setAnimeLangs?.(res.availableLangs);
-    if(!res?.streams?.length)return;
-    for(const r of res.streams){if(r?.key&&r?.src)regionalMap.set(r.key,r)}
-    ui?.setAnimeRegionalStreams?.(res.streams);
-   }).catch(()=>{});
+   const discover=async()=>{
+    ui?.setAudioDiscovery?.('loading');
+    try{
+     let res;
+     for(let attempt=0;attempt<2;attempt++){
+      res=await get(`/api/anime-audio?id=${x.id}&episode=${playingEpisode}&anilistId=${x.anilistId||''}${attempt?'&retry=1':''}`);
+      if(generation!==playGeneration)return;
+      if(res?.streams?.length||attempt)break;
+      await new Promise(resolve=>setTimeout(resolve,1400));
+     }
+     if(Array.isArray(res?.availableLangs)&&res.availableLangs.length)ui?.setAnimeLangs?.(res.availableLangs);
+     for(const r of res?.streams||[])if(r?.key&&r?.src)regionalMap.set(r.key,r);
+     ui?.setAnimeRegionalStreams?.(res?.streams||[]);
+     ui?.setAudioDiscovery?.(res?.streams?.length?'ready':res?.discoveryStatus==='blocked'?'blocked':'empty');
+    }catch{if(generation===playGeneration)ui?.setAudioDiscovery?.('error')}
+   };
+   void discover();
   }
   // If the source has no track for the language that was asked for, say so once.
   if(d.langFallback){
@@ -1902,7 +1923,18 @@ async function play(x,state=null,attempts=null){
    if(readPreference('kozutv-autoskip','false')==='true')for(let range of [d.intro,d.outro]){let start=Number(range?.start),end=Number(range?.end);if(start>=0&&end>start&&current>=start&&current<end){player.currentTime(end);break}}
    if(Number.isFinite(duration)&&duration>0&&Date.now()-lastProgressSent>5000){lastProgressSent=Date.now();save(current,duration)}
   });
-  player.on('ended',()=>{save(player.duration(),player.duration());if(readPreference('kozutv-autonext','true')!=='false')changeEpisode(1)});
+  player.on('ended',async()=>{
+   if(historyCompleted)return;historyCompleted=true;
+   try{
+    const record={...x,episode:playingEpisode,season:playingSeason};
+    const next=await nextContinueRecord(record,detail,lang);
+    if(readPreference('kozutv-save-history','true')!=='false'){
+     await post('/api/history',{...record,dismiss:true,completed:true,next});
+    }
+    if(generation===playGeneration&&next&&readPreference('kozutv-autonext','true')!=='false')
+     switchWatchEpisode(next,{skipSave:true});
+   }catch{historyCompleted=false;toast('Could not update Continue Watching. Please try again.');}
+  });
   player.on('error',()=>{
    if(generation!==playGeneration||ui?.isSourceSwitching?.())return;
    const error=player.error();
@@ -2166,7 +2198,43 @@ function syncMediaSession(x,episode,season){
     }
   }catch{}
 }
-function continueGrid(data){return `<div class="continue-grid">${data.map(x=>`<article class="continue-card" data-open="/watch/${x.type}/${x.id}?episode=${x.episode}&season=${x.season}"><div class="continue-image">${x.poster?`<img data-load-whole decoding="async" loading="lazy" src="${safeImage(x.poster)}" alt="${esc(x.title)}">`:''}</div><div class="continue-foot"><div class="continue-progress" style="width:${x.duration?Math.min(100,100*x.currentTime/x.duration):0}%"></div><span>${isFeature(x)?'MOVIE':x.type==='tv'?`S${x.season} E${x.episode}`:`EP ${x.episode}`}</span><span>${x.duration?clock(x.currentTime):'00:00'}</span></div><h3>${esc(x.title)}</h3></article>`).join('')}</div>`}
+// Resolve against released episodes, not just a season's announced count.
+async function nextContinueRecord(record,knownDetail=null,audio='sub'){
+ if(isFeature(record))return null;
+ const d=knownDetail||await get(`/api/detail?type=${record.type}&id=${record.id}`);
+ if(!d?.item)throw Error('Episode information is unavailable.');
+ if(record.type==='tv'){
+  const seasons=(d.seasons||[]).filter(s=>Number(s.number)>=Number(record.season)&&Number(s.episodes)>0).sort((a,b)=>a.number-b.number);
+  for(const se of seasons){
+   const list=await get(`/api/season?id=${record.id}&season=${se.number}`);
+   const next=(list.episodes||[]).filter(e=>Number(se.number)>Number(record.season)||Number(e.number)>Number(record.episode)).sort((a,b)=>a.number-b.number)[0];
+   if(next)return {...record,season:Number(se.number),episode:Number(next.number),currentTime:0,duration:0};
+  }
+  return null;
+ }
+ const target=targetsForEpisode(d,Number(record.episode),Number(record.season),audio).next;
+ if(!target)return null;
+ const nextDetail=String(target.id)===String(record.id)?d:await get(`/api/detail?type=anime&id=${target.id}`);
+ if(!nextDetail?.item||nextDetail.item.upcoming||nextDetail.item.unavailable)return null;
+ return {...record,...nextDetail.item,...target,currentTime:0,duration:0};
+}
+async function dismissContinue(button){
+ const key=button.dataset.dismissContinue,record=continueItems.find(x=>`${x.type}:${x.id}`===key);
+ if(!record||button.disabled)return;
+ button.disabled=true;button.setAttribute('aria-busy','true');
+ try{
+  const next=await nextContinueRecord(record);
+  const state=await post('/api/history',{...record,dismiss:true,next});
+  continueItems=(state.history||[]).slice(0,8);
+  const section=button.closest('.continue-section');
+  if(section?.isConnected){
+   if(continueItems.length)section.querySelector('.continue-grid').outerHTML=continueGrid(continueItems);
+   else section.remove();
+  }
+  toast(next?'Next episode ready at 00:00':'Removed from Continue Watching');
+ }catch{button.disabled=false;button.removeAttribute('aria-busy');toast('Could not update Continue Watching. Please try again.');}
+}
+function continueGrid(data){return `<div class="continue-grid">${data.map(x=>`<article class="continue-card" data-open="/watch/${x.type}/${x.id}?episode=${x.episode}&season=${x.season}"><div class="continue-image"><button type="button" class="continue-dismiss" data-dismiss-continue="${esc(x.type+':'+x.id)}" aria-label="Dismiss ${esc(x.title)} from Continue Watching" title="Dismiss episode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>${x.poster?`<img data-load-whole decoding="async" loading="lazy" src="${safeImage(x.poster)}" alt="${esc(x.title)}">`:''}</div><div class="continue-foot"><div class="continue-progress" style="width:${x.duration?Math.min(100,100*x.currentTime/x.duration):0}%"></div><span>${isFeature(x)?'MOVIE':x.type==='tv'?`S${x.season} E${x.episode}`:`EP ${x.episode}`}</span><span>${x.duration?clock(x.currentTime):'00:00'}</span></div><h3>${esc(x.title)}</h3></article>`).join('')}</div>`}
 
 async function watchlist(){
  const route=routeGeneration;
@@ -2382,6 +2450,7 @@ document.addEventListener('click',async e=>{
    }
    return;
   }
+  const dismiss=e.target.closest('[data-dismiss-continue]');if(dismiss){e.preventDefault();e.stopPropagation();void dismissContinue(dismiss);return}
   let description=e.target.closest('[data-description-toggle]');if(description){if(String(window.getSelection?.()||'').length)return;let expanded=description.classList.toggle('expanded');description.setAttribute('aria-expanded',String(expanded));return}
   let heroSave=e.target.closest('[data-hero-save]');if(heroSave){e.preventDefault();e.stopPropagation();let [type,id]=heroSave.dataset.heroSave.split(':'),x=[...spotlightItems,...items,...suggestions,...Object.values(genreRows).flat()].find(i=>i.type===type&&String(i.id)===id);if(x)changeWatchlistInstantly(x);return}
 

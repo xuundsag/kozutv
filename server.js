@@ -4,6 +4,8 @@
 import { describeKey, envFileReport, maskedKeys } from './load-env.js';
 import fs from 'node:fs';
 import { runtimeDataDir } from './runtime-data.js';
+import { dismissHistory } from './history-state.js';
+import { ANIME_AUDIO_KEYS, REGIONAL_AUDIO_LANGUAGES } from './audio-languages.js';
 import path from 'node:path';
 import freekeys from 'freekeys';
 import http from 'node:http';
@@ -23,7 +25,7 @@ import { mediaUrl, dashUrl, handleMedia, handleDash } from './media-proxy.js';
 import {
   OTT_SERVERS, OTT_SERVER_KEYS, DEFAULT_OTT_SERVER,
   resolveOttWithFallback, resolveAnimeRegionalAudio, resolveSpecialRegionalAnime,
-  fetchVidsparkSubtitles, resolveRegionalSubtitles, subtitleTracksForVariant
+  fetchVidsparkSubtitles, resolveRegionalSubtitles, subtitleTracksForVariant, regionalAudioStatus
 } from './ott-resolvers.js';
 
 const root = path.resolve('public');
@@ -241,12 +243,12 @@ function pokemonEpisodeMetaId(id, n) {
 // Every dub language the anime route may expose. Kept in sync with
 // REGIONAL_ANIME_WANTED in ott-resolvers.js: a code that is missing here is
 // filtered out of the answer even when the source actually carries it.
-const ANIME_REGIONAL_LANG_SET = new Set(['hi', 'ta', 'te', 'ml', 'kn', 'bn', 'mr', 'pa', 'gu', 'ur', 'zh', 'yue']);
-const ANIME_VALID_LANG_SET = new Set(['sub', 'dub', 'hi', 'ta', 'te', 'ml', 'kn', 'bn']);
+const ANIME_REGIONAL_LANG_SET = new Set(REGIONAL_AUDIO_LANGUAGES.map(([code])=>code));
+const ANIME_VALID_LANG_SET = new Set(ANIME_AUDIO_KEYS);
 // The language menu is built from the answer the stream gave, so an option is
 // listed only when it can actually play. Order is deliberate: original audio,
 // English, then the regional dubs in the order Indian viewers expect.
-const ANIME_LANG_ORDER = ['sub', 'dub', 'hi', 'ta', 'te', 'ml', 'kn', 'bn'];
+const ANIME_LANG_ORDER = ANIME_AUDIO_KEYS;
 function animeAvailableLangs({ sub = true, dub = true, regional = [] } = {}) {
   const set = new Set();
   if (sub) set.add('sub');
@@ -2612,6 +2614,12 @@ async function api(req, res, url) {
       let item = await requestBody(req);
       if (!['anime', 'movie', 'tv'].includes(item.type) || !num(String(item.id))) return json(res, { error: 'Invalid item' }, 400);
       let field = p.endsWith('watchlist') ? 'watchlist' : 'history';
+      if (field === 'history' && item.dismiss === true) {
+        try {
+          const saved = await getState(state => dismissHistory(cleanState(state), item));
+          return saved ? json(res, cleanState(saved), 200, req) : json(res, {error:'Account storage unavailable'}, 503, req);
+        } catch { return json(res, {error:'Invalid next episode'}, 400, req); }
+      }
       let record = {
         id: String(item.id),
         type: item.type,
@@ -2635,7 +2643,7 @@ async function api(req, res, url) {
         record.duration = item.duration == null ? old.duration || 0 : record.duration;
       }
       if (!record.genres.length && old) record.genres = old.genres || [];
-      if (field === 'history' || !item.remove) state[field].unshift(record);
+      if (!item.remove) state[field].unshift(record);
       return state;
       });
       return saved ? json(res, cleanState(saved), 200, req) : json(res, {error:'Account storage unavailable'}, 503, req);
@@ -3523,7 +3531,7 @@ async function api(req, res, url) {
             }];
           }
         }
-        return json(res, { streams: [...streams, ...jpStreams], availableLangs: animeAvailableLangs({ sub: Boolean(jpStreams.length) || id === '527' || id === '11595' || (id === '8687' && Number(ep) <= 156), dub: id === '527' || (id === '11595' ? streams.some(r => r.key === 'dub') : Number(ep) <= (id === '966' ? 78 : 52)), regional: streams }) }, 200, req);
+        return json(res, { streams: [...streams, ...jpStreams], discoveryStatus:regionalAudioStatus(), availableLangs: animeAvailableLangs({ sub: Boolean(jpStreams.length) || id === '527' || id === '11595' || (id === '8687' && Number(ep) <= 156), dub: id === '527' || (id === '11595' ? streams.some(r => r.key === 'dub') : Number(ep) <= (id === '966' ? 78 : 52)), regional: streams }) }, 200, req);
       }
 
       let available = megaForIds(id, aniId) || await ensureDynamicMegaEntry(id);
@@ -3559,6 +3567,7 @@ async function api(req, res, url) {
       }).filter(Boolean);
       return json(res, {
         streams,
+        discoveryStatus:regionalAudioStatus(),
         // What the series carries for this episode, so the menu can list exactly
         // those languages and never promise one it cannot play.
         availableLangs: animeAvailableLangs({ sub: available.sub !== false, dub: Boolean(available.dub), regional: streams })
@@ -3737,10 +3746,7 @@ async function api(req, res, url) {
               // streams that had already resolved, and the episode silently played
               // Japanese. Only the speculative (lang=sub) case keeps the short race.
               const rawReg = isRegionalReq
-                ? await Promise.race([
-                    regionalLookup,
-                    new Promise(r => setTimeout(() => r([]), 6000))
-                  ]).catch(() => [])
+                ? await regionalLookup.catch(() => [])
                 : await Promise.race([
                     regionalLookup,
                     new Promise(r => setTimeout(() => r([]), 220))

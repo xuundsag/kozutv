@@ -490,7 +490,7 @@ function create(player,options={}){
   const edgeSpec=captionEdges[captionStyle.edge]||captionEdges[preset.edge]||captionEdges.none;
   const weight=captionStyle.weight||(captionMode==='anime-dub'?'400':captionMode==='anime-sub'?'700':'600');
   const hasBox=bgOp>0;
-  host.style.setProperty('--mp-subtitle-scale',String(Number(captionStyle.size||preset.size||100)/100));
+  host.style.setProperty('--mp-subtitle-scale',String(Math.min(2,Math.max(.5,(Number(captionStyle.size||preset.size)||100)/100))));
   host.style.setProperty('--mp-subtitle-color',rgba(fg,captionStyle.textOpacity??100));
   host.style.setProperty('--mp-subtitle-background',rgba(bg,bgOp));
   host.style.setProperty('--mp-subtitle-font',captionFonts[captionStyle.font]||captionFonts[preset.font]||captionFonts.system);
@@ -1490,9 +1490,9 @@ function create(player,options={}){
   }).join('');
   list.innerHTML=`<button type="button" class="mp-list-row ${currentQuality==='auto'?'selected':''}" data-quality="auto"><span>Auto</span>${autoTag}</button>`+rows;
   const serverSection=$('.mp-server-section'),serverList=$('.mp-server-list');
-  serverSection.hidden=false;
-  {
-   let currentServer=options.server||(isAnime?'megaplay':'vidcore');
+  serverSection.hidden=isAnime;
+  if(!isAnime){
+   let currentServer=options.server||'vidcore';
    const availableServers=isAnime?[['megaplay','MegaPlay']]:servers;
    serverList.innerHTML=availableServers.map(([key,name])=>`<button type="button" class="mp-list-row ${currentServer===key?'selected':''}" data-server-choice="${key}"><span>${esc(name)}</span></button>`).join('');
   }
@@ -1605,11 +1605,12 @@ function create(player,options={}){
   const index=order[0];
   if(index!==undefined&&!tracks[index].enabled)switchHlsAudioTrack(index,false);
  }
+ function setAudioDiscovery(status){if(!disposed){data.audioDiscovery=status;renderAudio()}}
  function setAnimeLangs(langs){
   if(disposed||!isAnime)return;
   const list=(Array.isArray(langs)?langs:[]).map(String).filter(Boolean);
   if(!list.length)return;
-  data.availableLangs=list;
+  data.availableLangs=[...new Set([...(data.availableLangs||[]),...list])];
   renderAudio();
  }
  function setAnimeRegionalStreams(streams){
@@ -1642,12 +1643,12 @@ function create(player,options={}){
    const declared=Array.isArray(data.availableLangs)&&data.availableLangs.length
     ? data.availableLangs.map(String)
     : null;
-   const regionalLabel={hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',bn:'Bengali'};
+   const regionalLabel={hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',bn:'Bengali',mr:'Marathi',pa:'Punjabi',gu:'Gujarati',ur:'Urdu',zh:'Chinese',yue:'Cantonese'};
    const labelFor=key=>{
     if(key==='sub')return captionLanguageName(String(item.originalLanguage||'ja').slice(0,2));
     if(key==='dub')return 'English';
     const stream=animeRegionalStreams.find(a=>a.key===key);
-    return stream?.label||regionalLabel[key]||String(key).toUpperCase();
+    return stream?.label||regionalLabel[key]||captionLanguageName(key);
    };
    if(declared){
     // The stream itself said what it carries; every one of those plays, so
@@ -1670,11 +1671,13 @@ function create(player,options={}){
    // The track that is playing is always listed, even if a late-arriving list
    // has not caught up yet.
    if(!choices.some(([key])=>key===currentLang)){const labels={hi:'Hindi',ta:'Tamil',te:'Telugu',ml:'Malayalam',kn:'Kannada',bn:'Bengali'};choices.push([currentLang,labels[currentLang]||currentLang.toUpperCase()])}
+   const discovery=data.audioDiscovery==='loading'?'<div class="mp-audio-status" role="status">Finding more audio languages…</div>':data.audioDiscovery==='blocked'?'<div class="mp-audio-status" role="status">The regional audio provider is refusing this server. Available tracks are listed above.</div>':['empty','error'].includes(data.audioDiscovery)?'<div class="mp-audio-status" role="status">No additional audio could be reached for this episode. Try again later.</div>':'';
    const sourceRows=choices.map(([key,label])=>`<button type="button" class="mp-list-row ${currentLang===key?'selected':''}" data-audio-choice="${esc(key)}"><span>${esc(label)}</span></button>`).join('');
    const tracks=Array.from(player.audioTracks?.()||[]);
    list.innerHTML=tracks.length>1
     ?'<div class="mp-audio-group">Audio source</div>'+sourceRows+'<div class="mp-audio-group">Audio track</div>'+tracks.map((track,i)=>`<button type="button" class="mp-list-row ${track.enabled?'selected':''}" data-audio-track="${i}"><span>${esc(formatAudioLabel(track.label,track.language,i))}</span></button>`).join('')
     :sourceRows;
+   list.insertAdjacentHTML('beforeend',discovery);
    return;
   }
   let tracks=Array.from(player.audioTracks?.()||[]);
@@ -2643,7 +2646,7 @@ function create(player,options={}){
  });
 
  lastCaptionAudioSignature=captionAudioSignature();applyCaptionStyle();disableAllNativeTracks();restoreSubtitlePreference();updatePlay();updateVolume();updateTime();renderTracks();renderAudio();renderQuality();renderPlaybackSettings();updateFullscreen();showControls();
- player.megaUI={ui,showControls,hideControls,openSettings,closeSettings,selectSubtitle,selectQuality,setAnimeLangs,setAnimeRegionalStreams,switchAnimeSource,notify,isSourceSwitching:()=>sourceSwitching,onAutoplayBlocked:()=>{ui.dataset.autoplay='false';ui.dataset.paused='true';updateLoading();showControls()}};
+ player.megaUI={ui,showControls,hideControls,openSettings,closeSettings,selectSubtitle,selectQuality,setAnimeLangs,setAudioDiscovery,setAnimeRegionalStreams,switchAnimeSource,notify,isSourceSwitching:()=>sourceSwitching,onAutoplayBlocked:()=>{ui.dataset.autoplay='false';ui.dataset.paused='true';updateLoading();showControls()}};
  return player.megaUI;
 }
 

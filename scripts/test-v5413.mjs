@@ -87,9 +87,12 @@ try{
  assert.equal((await p.locator('.settings-page').innerText()).match(/AI/g).length,1,'only the switch says AI — never a disclosure');
  await p.locator('[data-reset-settings]').click();
  assert.equal(await p.evaluate(()=>localStorage.getItem('kozutv-ai-transcription')),null,'reset clears the preference');
+ // Reset intentionally turns AI off; opt in for the transcription assertions.
+ await p.locator('.setting-row:has([data-site-pref="kozutv-ai-transcription"]) .site-switch').click();
  await p.goto(origin+'/watch/movie/55555');await p.waitForFunction(()=>{const v=window.videojs?.getPlayer('kozutv-video');return v?.megaUI&&v.duration()>=170&&v.readyState()>=2},{timeout:18000});
  const menu=async name=>p.evaluate(x=>window.videojs.getPlayer('kozutv-video').megaUI.openSettings(x),name);
  const labels=()=>p.locator('.mp-track-list button').allTextContents();
+ await menu('quality');assert.equal(await p.locator('.mp-server-section').isVisible(),true,'movies retain server selection');assert(await p.locator('[data-server-choice]').count()>1);
  await menu('cc');assert.deepEqual(await labels(),['Off','English']);assert.equal(await p.locator('.mp-ai-disclosure').count(),0,'no disclosure text under the caption choices');await p.locator('[data-track="0"]').click();
  await p.waitForFunction(()=>window.__noop||document.querySelector('.mp-cc-button.on'));
  await p.waitForTimeout(350);assert(calls.some(x=>x.language==='en'&&x.time===0));assert(calls.some(x=>x.language==='en'&&x.time===12),'next window preloaded');
@@ -134,7 +137,7 @@ try{
  // Anime sources can themselves contain multiple native HLS audio tracks.
  // The selected track, not the original source label, controls the captions.
  const ac=await browser.newContext({viewport:{width:1200,height:850}});let animeCalls=[];
- await ac.addInitScript(()=>{localStorage.setItem('kozutv-autoplay','false');localStorage.setItem('kozutv-save-history','false')});
+ await ac.addInitScript(()=>{localStorage.setItem('kozutv-autoplay','false');localStorage.setItem('kozutv-save-history','false');localStorage.setItem('kozutv-ai-transcription','true')});
  await ac.route('**/api/**',async route=>{
   const u=new URL(route.request().url());
   if(u.pathname==='/api/detail')return json(route,{item:{...item,id:'55556',type:'anime',title:'Anime track fixture',sub:true,dub:true,originalLanguage:'ja'},seasons:[],episodes:[]});
