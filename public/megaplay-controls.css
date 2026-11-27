@@ -1,0 +1,792 @@
+/* MegaPlay-style controls for kozuTV's Video.js player. */
+.mp-host {
+  --mp-subtitle-color: #fff;
+  --mp-subtitle-scale: 1;
+  --mp-subtitle-background: rgba(0, 0, 0, 0);
+  --mp-subtitle-font: "Trebuchet MS", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --mp-subtitle-shadow: 0 2px 5px rgba(0, 0, 0, .82);
+  --mp-subtitle-stroke: 0.16em #000;
+  --mp-subtitle-weight: 700;
+  --mp-subtitle-padding: .03em .14em;
+  --mp-subtitle-radius: 0px;
+  --mp-subtitle-line-height: 1.25;
+  --mp-subtitle-gap: 2px;
+  background: #000;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.mp-host,
+.mp-host *,
+.mp-ui,
+.mp-ui * {
+  -webkit-tap-highlight-color: transparent;
+}
+.mp-host:focus,
+.mp-host:focus-visible,
+.mp-host *:focus,
+.mp-host *:focus-visible,
+.mp-ui button:focus,
+.mp-ui button:focus-visible,
+.mp-ui select:focus,
+.mp-ui select:focus-visible,
+.mp-ui input:focus,
+.mp-ui input:focus-visible {
+  outline: none !important;
+}
+.mp-host .vjs-slider:focus,
+.mp-host .vjs-control:focus {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.mp-host .vjs-control-bar,
+.mp-host .vjs-big-play-button,
+.mp-host .vjs-text-track-display,
+.mp-host .vjs-loading-spinner { display: none !important; }
+.mp-host .vjs-tech {
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #000;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.mp-host.vjs-fullscreen,
+.player:fullscreen,
+.player:-webkit-full-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+}
+.mp-host.vjs-fullscreen,
+.player:fullscreen .video-js,
+.player:-webkit-full-screen .video-js {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  background: #000 !important;
+}
+.mp-host.vjs-fullscreen .vjs-tech,
+.player:fullscreen .video-js .vjs-tech,
+.player:-webkit-full-screen .video-js .vjs-tech {
+  position: absolute !important;
+  inset: 0 !important;
+  left: 0 !important;
+  top: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #000 !important;
+}
+
+.mp-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  color: #fff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.mp-ui * { box-sizing: border-box; }
+.mp-ui [hidden] { display: none !important; }
+.mp-ui button {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  cursor: pointer;
+}
+.mp-button {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 5px;
+  color: #fff;
+  opacity: .92;
+  transition: opacity .15s ease, transform .12s ease;
+  pointer-events: auto;
+}
+.mp-button svg { display: block; width: 23px; height: 23px; fill: currentColor; }
+.mp-button svg[fill="none"] { fill: none; }
+.mp-button:hover,
+.mp-button.on { color: #fff; opacity: 1; }
+
+/* Exact mathematically centered player spinner — permanently GPU-layered (no display:none layout/compositor flashes). */
+@keyframes mpSpin { to { transform: rotate(360deg); } }
+.mp-loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 9;
+  display: block;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-50%, -50%, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: opacity .12s ease 0s, visibility 0s linear .12s;
+  pointer-events: none;
+}
+.mp-loader::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 3.5px solid rgba(255, 255, 255, .2);
+  border-top-color: #ff731c;
+  border-radius: 50%;
+  animation: mpSpin .75s linear infinite paused;
+  content: "";
+}
+.mp-ui[data-loading="true"] .mp-loader {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .14s ease .12s, visibility 0s linear .12s;
+}
+.mp-ui[data-loading="true"] .mp-loader::before {
+  animation-play-state: running;
+}
+
+/* Double-tap 10s skip indicator — pure GPU opacity + translate3d (no display toggle, scale bounce, or SVG drop-shadow tear). */
+@keyframes mpTapSeekRight {
+  0% { opacity: 0; transform: translate3d(-8px, -50%, 0); }
+  20% { opacity: 1; transform: translate3d(2px, -50%, 0); }
+  74% { opacity: 1; transform: translate3d(6px, -50%, 0); }
+  100% { opacity: 0; transform: translate3d(10px, -50%, 0); }
+}
+@keyframes mpTapSeekLeft {
+  0% { opacity: 0; transform: translate3d(8px, -50%, 0); }
+  20% { opacity: 1; transform: translate3d(-2px, -50%, 0); }
+  74% { opacity: 1; transform: translate3d(-6px, -50%, 0); }
+  100% { opacity: 0; transform: translate3d(-10px, -50%, 0); }
+}
+.mp-tap-seek {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 58px;
+  padding: 12px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(0, 0, 0, .34) 0%, rgba(0, 0, 0, 0) 72%);
+  color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, -50%, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+}
+.mp-tap-seek[data-side="right"] { right: 13%; }
+.mp-tap-seek[data-side="left"] { left: 13%; }
+.mp-tap-seek.is-animating { visibility: visible; }
+.mp-tap-seek.is-animating[data-side="right"] { animation: mpTapSeekRight .62s cubic-bezier(.22, .8, .28, 1) forwards; }
+.mp-tap-seek.is-animating[data-side="left"] { animation: mpTapSeekLeft .62s cubic-bezier(.22, .8, .28, 1) forwards; }
+.mp-tap-seek svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+.mp-tap-seek span {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: .01em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .82);
+}
+
+/* Center Resume button stays strictly hidden while playing, loading, seeking, scrubbing, or when settings is open. */
+.mp-ui .mp-center-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 8;
+  display: none !important;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  opacity: .86;
+  transition: opacity .18s ease;
+  pointer-events: auto;
+}
+.mp-center-play svg { display: block; width: 70px; height: 70px; fill: currentColor; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .55)); }
+.mp-ui[data-paused="true"]:not([data-loading="true"]):not([data-seeking="true"]):not([data-scrubbing="true"]):not([data-settings-open="true"]) .mp-center-play { display: grid !important; }
+.mp-host.vjs-waiting .mp-ui .mp-center-play,
+.mp-host.vjs-seeking .mp-ui .mp-center-play,
+.mp-host:not(.vjs-has-started) .mp-ui[data-autoplay="true"] .mp-center-play { display: none !important; }
+.mp-center-play:hover { opacity: 1; }
+.mp-ui[data-active="false"] .mp-center-play { opacity: 0 !important; pointer-events: none !important; }
+
+.mp-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  padding: 0 12px 4px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, .74), rgba(0, 0, 0, 0));
+  opacity: 1;
+  transition: opacity .18s ease;
+  pointer-events: auto;
+}
+.mp-ui[data-active="false"] .mp-bottom,
+.mp-ui[data-settings-open="true"] .mp-bottom { opacity: 0; pointer-events: none; }
+.mp-control-row { display: flex; align-items: center; height: 40px; gap: 2px; margin: 0 -4px; }
+.mp-spacer { display: block; flex: 1; min-width: 0; }
+.mp-time { flex: 0 0 auto; padding: 0 6px; color: #f5f5f5; font-size: 13.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Seek rail with MegaPlay-matching 12px left/right inset, held-position dot, and compact overlaid-time thumbnail preview. */
+.mp-seek-area { position: relative; height: 16px; margin: 0; --mp-scrub-percent: 0%; }
+.mp-seek-rail { position: absolute; left: 0; right: 0; top: 5px; height: 5px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, .24); transition: height .12s ease, top .12s ease; }
+.mp-seek-area:hover .mp-seek-rail,
+.mp-ui[data-scrubbing="true"] .mp-seek-rail { top: 4px; height: 7px; }
+.mp-seek-buffer,
+.mp-seek-progress { position: absolute; left: 0; top: 0; bottom: 0; width: 0; }
+.mp-seek-buffer { z-index: 1; background: rgba(255, 255, 255, .22); }
+.mp-seek-progress { z-index: 4; background: #ff731c; }
+.mp-seek-marker { position: absolute; top: 0; bottom: 0; z-index: 3; background: #ffd166; pointer-events: none; }
+.mp-seek-dot {
+  position: absolute;
+  left: var(--mp-scrub-percent);
+  top: 1px;
+  z-index: 7;
+  display: none;
+  width: 14px;
+  height: 14px;
+  transform: translateX(-50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #ff731c;
+  box-shadow: 0 1px 5px #000;
+  pointer-events: none;
+}
+.mp-ui[data-scrubbing="true"] .mp-seek-dot { display: block; }
+.mp-seek-input { position: absolute; inset: 0; z-index: 8; width: 100%; height: 16px; margin: 0; opacity: 0; cursor: pointer; touch-action: none; }
+
+/* Compact, fast seek preview card with timestamp hovering OVER the image. */
+.mp-seek-preview {
+  position: absolute;
+  bottom: 20px;
+  z-index: 10;
+  width: 132px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  transform: translateX(-50%);
+  border: 1.5px solid rgba(255, 255, 255, .82);
+  border-radius: 6px;
+  background: #101115;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .72);
+  pointer-events: none;
+}
+.mp-seek-preview canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .1s ease;
+}
+.mp-seek-preview.has-frame canvas { opacity: 1; }
+.mp-seek-preview:not(.has-frame)::before {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, .22);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: mpSpin .65s linear infinite;
+  content: "";
+}
+.mp-preview-time {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  z-index: 2;
+  padding: 1px 6px;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, .68);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .95);
+  white-space: nowrap;
+}
+.mp-preview-source { position: absolute !important; left: 0 !important; bottom: 0 !important; z-index: 0 !important; width: 2px !important; height: 2px !important; opacity: 0 !important; pointer-events: none !important; }
+
+/* Top-left Previous Episode & Top-right Next Episode buttons — matches .mp-button 1:1 (no bg, no border, balanced inset) */
+.mp-ui .mp-prev-ep,
+.mp-ui .mp-next-ep {
+  position: absolute;
+  top: 12px;
+  z-index: 8;
+  width: 38px;
+  height: 38px;
+  padding: 5px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  color: #fff;
+  opacity: .92;
+  transition: opacity .18s ease, transform .12s ease;
+  pointer-events: auto;
+}
+.mp-ui .mp-prev-ep { left: 12px; }
+.mp-ui .mp-next-ep { right: 12px; }
+.mp-ui .mp-prev-ep[hidden],
+.mp-ui .mp-next-ep[hidden] {
+  display: none !important;
+}
+.mp-ui .mp-prev-ep svg,
+.mp-ui .mp-next-ep svg {
+  display: block;
+  width: 23px;
+  height: 23px;
+  fill: currentColor;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .65));
+}
+.mp-ui .mp-prev-ep:hover,
+.mp-ui .mp-next-ep:hover {
+  opacity: 1;
+  background: transparent !important;
+  border: 0 !important;
+  color: #fff !important;
+}
+.mp-ui[data-active="false"] .mp-prev-ep,
+.mp-ui[data-active="false"] .mp-next-ep,
+.mp-ui[data-settings-open="true"] .mp-prev-ep,
+.mp-ui[data-settings-open="true"] .mp-next-ep {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Manual chapter skipping */
+.mp-skip {
+  position: absolute;
+  right: 14px;
+  bottom: 68px;
+  z-index: 8;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, .8) !important;
+  border-radius: 4px !important;
+  background: rgba(15, 15, 15, .86) !important;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 1;
+  transition: opacity .18s ease;
+  pointer-events: auto;
+}
+.mp-skip:hover { background: #fff !important; color: #111 !important; }
+.mp-ui[data-active="false"] .mp-skip,
+.mp-ui[data-settings-open="true"] .mp-skip { opacity: 0; pointer-events: none; }
+
+/* Custom captions: non-overlapping flow layout */
+.mp-captions {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 60px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mp-subtitle-gap);
+  font-family: var(--mp-subtitle-font);
+  font-size: calc(clamp(14px, 2.5vw, 28px) * var(--mp-subtitle-scale));
+  line-height: var(--mp-subtitle-line-height);
+  text-align: center;
+  transition: bottom .18s ease;
+  pointer-events: none;
+}
+.mp-ui[data-active="false"] .mp-captions { bottom: 20px; }
+.mp-ui[data-caption-position="middle"] .mp-captions { top: 50%; bottom: auto; transform: translateY(-50%); }
+.mp-ui[data-caption-position="top"] .mp-captions { top: 20px; bottom: auto; }
+.mp-caption-cue { display: block; width: 100%; text-align: center; }
+.mp-caption-text {
+  display: inline;
+  padding: var(--mp-subtitle-padding);
+  border-radius: var(--mp-subtitle-radius);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background: var(--mp-subtitle-background);
+  color: var(--mp-subtitle-color);
+  font-family: var(--mp-subtitle-font);
+  font-weight: var(--mp-subtitle-weight);
+  -webkit-text-stroke: var(--mp-subtitle-stroke);
+  paint-order: stroke fill;
+  text-shadow: var(--mp-subtitle-shadow);
+  white-space: pre-line;
+}
+
+/* Reverted clean MegaPlay-matching Settings Popover Card */
+.mp-settings {
+  position: absolute;
+  right: 12px;
+  bottom: 52px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  width: min(calc(100% - 24px), 296px);
+  max-height: calc(100% - 62px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 8px;
+  background: rgba(26, 26, 26, .97);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .65);
+  color: #fff;
+  pointer-events: auto;
+}
+.mp-settings-tabs {
+  display: flex;
+  align-items: center;
+  flex: 0 0 44px;
+  height: 44px;
+  padding: 0 6px;
+  background: #141414;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.mp-settings-tabs .mp-button {
+  position: relative;
+  width: 40px;
+  height: 44px;
+  color: #fff;
+  opacity: .78;
+}
+.mp-settings-tabs .mp-button:hover,
+.mp-settings-tabs .mp-tab.active {
+  color: #fff;
+  opacity: 1;
+}
+.mp-settings-tabs .mp-button svg { width: 21px; height: 21px; }
+.mp-settings-tabs .mp-tab.active::after {
+  position: absolute;
+  right: 7px;
+  bottom: 0;
+  left: 7px;
+  height: 2.5px;
+  border-radius: 2px 2px 0 0;
+  background: #fff;
+  content: "";
+}
+.mp-settings-close { margin-left: auto; }
+.mp-ui[data-subpanel="caption-style"] .mp-settings-tabs { display: none; }
+
+.mp-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 410px;
+  padding: 4px 0 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .55) transparent;
+}
+.mp-panel[data-panel="cc"],
+.mp-panel[data-panel="caption-style"] { padding-top: 0; }
+
+.mp-cc-topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 7px 16px;
+  background: rgba(255, 255, 255, .05);
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+.mp-subtitle-settings-link {
+  padding: 2px 0;
+  color: #f0f0f0;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mp-subtitle-settings-link:hover { color: #fff; }
+.mp-list-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 16px 8px 24px;
+  color: #eaeaea;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+}
+.mp-list-row:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+.mp-list-row.selected { color: #fff; font-weight: 600; }
+.mp-list-row.selected::before {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  content: "•";
+}
+.mp-quality-tag {
+  margin-left: auto;
+  padding-left: 10px;
+  color: #ff8c42;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  font-variant-numeric: tabular-nums;
+}
+.mp-list-row:not(.selected) .mp-quality-tag {
+  color: #a8abb4;
+  font-weight: 600;
+}
+.mp-empty { margin: 10px 16px 12px; color: #aaa; font-size: 13px; line-height: 1.45; }
+
+.mp-server-section {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, .09);
+}
+.mp-audio-group,
+.mp-server-section h3 {
+  margin: 2px 16px 4px;
+  color: #9e9e9e;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* MegaPlay-style Subtitle Settings sub-panel (clean header + chevron rows, no preview/reset clutter) */
+.mp-style-header {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 6px;
+  background: #141414;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.mp-style-header .mp-button { width: 38px; height: 40px; }
+.mp-style-header strong {
+  margin-left: 2px;
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+.mp-style-header .mp-style-close { margin-left: auto; }
+.mp-style-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 40px;
+  padding: 6px 16px;
+  color: #eaeaea;
+  font-size: 14px;
+}
+.mp-style-row:hover { background: rgba(255, 255, 255, .06); }
+.mp-style-row::after {
+  position: absolute;
+  right: 14px;
+  color: #ddd;
+  font-size: 17px;
+  line-height: 1;
+  pointer-events: none;
+  content: "›";
+}
+.mp-style-row select {
+  max-width: 150px;
+  padding: 4px 18px 4px 6px;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #f2f2f2;
+  font: inherit;
+  font-size: 13.5px;
+  text-align: right;
+  text-align-last: right;
+  cursor: pointer;
+}
+.mp-style-row select option { background: #222; color: #fff; text-align: left; }
+
+.mp-is-fullscreen .mp-bottom { padding: 0 16px 5px; }
+.mp-is-fullscreen .mp-control-row { height: 46px; }
+.mp-is-fullscreen .mp-button { width: 42px; height: 42px; }
+.mp-is-fullscreen .mp-button svg { width: 25px; height: 25px; }
+.mp-is-fullscreen .mp-center-play { width: 108px; height: 108px; }
+.mp-is-fullscreen .mp-center-play svg { width: 92px; height: 92px; }
+.mp-is-fullscreen .mp-seek-preview { width: 152px; bottom: 24px; }
+.mp-ui.mp-is-fullscreen .mp-prev-ep,
+.mp-ui.mp-is-fullscreen .mp-next-ep {
+  top: max(16px, calc(env(safe-area-inset-top, 0px) + 12px));
+  width: 42px;
+  height: 42px;
+  padding: 5px;
+}
+.mp-ui.mp-is-fullscreen .mp-prev-ep {
+  left: max(14px, calc(env(safe-area-inset-left, 0px) + 12px));
+}
+.mp-ui.mp-is-fullscreen .mp-next-ep {
+  right: max(14px, calc(env(safe-area-inset-right, 0px) + 12px));
+}
+.mp-ui.mp-is-fullscreen .mp-prev-ep svg,
+.mp-ui.mp-is-fullscreen .mp-next-ep svg { width: 25px; height: 25px; }
+
+@media (max-width: 650px) {
+  .mp-bottom { padding: 0 12px 3px; }
+  .mp-control-row { height: 36px; margin: 0 -3px; }
+  .mp-button { width: 32px; height: 34px; padding: 4px; }
+  .mp-button svg { width: 20px; height: 20px; }
+  .mp-time { padding: 0 4px; font-size: 12px; }
+  .mp-seek-area { height: 15px; margin: 0; }
+  .mp-seek-rail { top: 5px; height: 5px; }
+  .mp-seek-input { height: 15px; }
+  .mp-seek-dot { top: 1px; }
+  .mp-seek-preview { bottom: 18px; width: 104px; border-radius: 5px; }
+  .mp-preview-time { bottom: 3px; padding: 1px 5px; font-size: 10px; }
+  .mp-ui .mp-center-play { width: 62px; height: 62px; }
+  .mp-center-play svg { width: 52px; height: 52px; }
+  .mp-loader { width: 38px; height: 38px; }
+  .mp-tap-seek svg { width: 25px; height: 25px; }
+  .mp-tap-seek span { font-size: 13px; }
+  .mp-ui:not(.mp-is-fullscreen) .mp-prev-ep,
+  .mp-ui:not(.mp-is-fullscreen) .mp-next-ep { top: 9px; width: 32px; height: 34px; padding: 4px; }
+  .mp-ui:not(.mp-is-fullscreen) .mp-prev-ep { left: 10px; }
+  .mp-ui:not(.mp-is-fullscreen) .mp-next-ep { right: 10px; }
+  .mp-ui:not(.mp-is-fullscreen) .mp-prev-ep svg,
+  .mp-ui:not(.mp-is-fullscreen) .mp-next-ep svg { width: 20px; height: 20px; }
+  .mp-captions { left: 5%; right: 5%; bottom: 48px; font-size: calc(clamp(12.5px, 3.8vw, 19px) * var(--mp-subtitle-scale)); }
+  .mp-ui[data-active="false"] .mp-captions { bottom: 12px; }
+  .mp-skip { right: 12px; bottom: 56px; padding: 7px 12px; font-size: 12.5px; }
+
+  /* Compact, right-aligned MegaPlay settings popover on mobile portrait */
+  .mp-settings {
+    left: auto;
+    right: 8px;
+    top: 8px;
+    bottom: 8px;
+    width: min(232px, calc(100% - 16px));
+    max-height: calc(100% - 16px);
+    border-radius: 8px;
+  }
+  .mp-settings-tabs { flex: 0 0 32px; height: 32px; padding: 0 4px; }
+  .mp-settings-tabs .mp-button { width: 32px; height: 32px; }
+  .mp-settings-tabs .mp-button svg { width: 16px; height: 16px; }
+  .mp-panel { flex: 1 1 auto; min-height: 0; max-height: none; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 2px 0 5px; }
+  .mp-cc-topbar { padding: 4px 12px; }
+  .mp-list-row { min-height: 26px; padding: 3px 12px 3px 20px; font-size: 12px; }
+  .mp-list-row.selected::before { left: 9px; font-size: 13px; }
+  .mp-server-section { margin-top: 3px; padding-top: 4px; }
+  .mp-audio-group, .mp-server-section h3 { margin: 1px 12px 2px; padding: 0; font-size: 9.5px; }
+  .mp-style-header { height: 32px; padding: 0 4px; font-size: 12px; }
+  .mp-style-row { min-height: 28px; padding: 3px 10px; font-size: 12px; }
+  .mp-style-row select { min-width: 96px; height: 24px; font-size: 11.5px; }
+  .mp-boost-wrap { padding: 10px 12px 8px; }
+  .mp-boost-wrap input { margin: 10px 0 7px; }
+
+  .mp-is-fullscreen .mp-bottom { padding: 0 16px 4px; }
+  .mp-is-fullscreen .mp-settings {
+    left: auto;
+    top: auto;
+    right: 14px;
+    bottom: 54px;
+    width: min(calc(100% - 28px), 290px);
+    max-height: calc(100% - 68px);
+  }
+  .mp-ui.mp-is-fullscreen .mp-prev-ep,
+  .mp-ui.mp-is-fullscreen .mp-next-ep {
+    top: max(14px, calc(env(safe-area-inset-top, 0px) + 10px));
+    width: 38px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 0 !important;
+  }
+  .mp-ui.mp-is-fullscreen .mp-prev-ep {
+    left: max(14px, calc(env(safe-area-inset-left, 0px) + 12px));
+  }
+  .mp-ui.mp-is-fullscreen .mp-next-ep {
+    right: max(14px, calc(env(safe-area-inset-right, 0px) + 12px));
+  }
+  .mp-ui.mp-is-fullscreen .mp-prev-ep svg,
+  .mp-ui.mp-is-fullscreen .mp-next-ep svg { width: 23px; height: 23px; }
+  .mp-ui.mp-is-fullscreen .mp-control-row { height: 44px; }
+  .mp-ui.mp-is-fullscreen .mp-button { width: 38px; height: 40px; }
+  .mp-ui.mp-is-fullscreen .mp-button svg { width: 23px; height: 23px; }
+  .mp-is-fullscreen .mp-time { font-size: 13.5px; }
+  .mp-is-fullscreen .mp-seek-preview { width: 128px; bottom: 22px; }
+  .mp-is-fullscreen .mp-captions { left: 6%; right: 6%; bottom: 56px; font-size: calc(clamp(15px, 4.4vh, 26px) * var(--mp-subtitle-scale)); }
+  .mp-is-fullscreen[data-active="false"] .mp-captions { bottom: 18px; }
+}
+@media (max-width: 380px) {
+  .mp-bottom { padding: 0 10px 3px; }
+  .mp-button { width: 29px; height: 32px; padding: 3px; }
+  .mp-button svg { width: 18px; height: 18px; }
+  .mp-time { font-size: 11.5px; }
+  .mp-seek-preview { width: 96px; }
+}
+
+.mp-ui {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Source change feedback remains visible in fullscreen. */
+.mp-notice{position:absolute;top:22px;left:50%;z-index:15;max-width:min(90%,520px);padding:9px 14px;transform:translateX(-50%);border:1px solid #ffffff30;border-radius:8px;background:#181b22eb;color:#fff;font:600 13px/1.4 system-ui,sans-serif;text-align:center;box-shadow:0 8px 24px #0007;pointer-events:none}
+.mp-notice[hidden]{display:none}
+
+/* ---- V5.4.14: caption box must not reflow while the text changes ---- */
+.mp-captions { contain: layout paint; }
+.mp-caption-cue { min-height: 0; transition: none !important; animation: none !important; }
+.mp-caption-text { transition: none !important; animation: none !important; }
+
+/* V33: original Megaplay controls, with a thin rail and persistent playhead. */
+.mp-ui .mp-seek-rail,.mp-ui .mp-seek-area:hover .mp-seek-rail,.mp-ui[data-scrubbing="true"] .mp-seek-rail{top:6px;height:3px}
+.mp-ui .mp-seek-dot{display:block}
+
+/* V34: modestly thicker seekbar and solid playhead. */
+.mp-ui .mp-seek-rail,.mp-ui .mp-seek-area:hover .mp-seek-rail,.mp-ui[data-scrubbing="true"] .mp-seek-rail{top:5px;height:5px}
+.mp-ui .mp-seek-dot{border:0}

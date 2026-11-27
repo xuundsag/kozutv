@@ -1,0 +1,23 @@
+{
+  "name": "kozuTV - Watch Free Anime, Movies & Series in HD",
+  "short_name": "kozuTV",
+  "description": "Watch thousands of HD anime episodes in English Sub & Dub alongside movies and web series for free on kozuTV.",
+  "start_url": "/browse",
+  "display": "standalone",
+  "background_color": "#101116",
+  "theme_color": "#101116",
+  "icons": [
+    {
+      "src": "/images/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

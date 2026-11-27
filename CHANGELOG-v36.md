@@ -1,0 +1,3 @@
+# V36 partial — report heading and icon
+Report heading uses the same bold display font treatment as page headings; its menu icon is a warning triangle. Real local Playwright report form, database insert/query and deletion test passed.
+Vidwave was investigated, not integrated: documented Hindi AniList iframe requires its own cross-origin player and does not transfer its controls to our player. The provider's own builder test for AniList 151807 episode 1 redirected main to an empty root, and backup stayed black with HTTP 400; verified from sandbox only. Its movie/TV endpoints are documented upcoming. No claim of Hindi playback; EmbedWave not removed. Other V35 unfinished work remains. No deployment.

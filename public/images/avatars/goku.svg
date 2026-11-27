@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-hidden="true" focusable="false">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb02e"/><stop offset="1" stop-color="#bd5100"/></linearGradient>
+<clipPath id="c"><circle cx="64" cy="64" r="64"/></clipPath></defs>
+<g clip-path="url(#c)">
+<rect width="128" height="128" fill="url(#g)"/>
+<path d="M64 103c-17 0-30 7-34 25h68c-4-18-17-25-34-25z" fill="#ff7a1a"/>
+<path d="M56 96h16v12H56z" fill="#f7cca6" opacity=".92"/>
+<circle cx="64" cy="65" r="29" fill="#151519"/><polygon points="25.7 57.7 39.2 55.6 34.7 47.7 43.8 47.8 39.1 34.9 50.9 42.0 52.5 33.0 59.4 38.9 64.0 26.0 68.6 38.9 75.5 33.0 77.1 42.0 88.9 34.9 84.2 47.8 93.3 47.7 88.8 55.6 102.3 57.7" fill="#151519"/>
+<circle cx="64" cy="80" r="25" fill="#f7cca6"/>
+
+
+<ellipse cx="52" cy="78" rx="3.3" ry="4.3" fill="#1a1b23"/><circle cx="53.1" cy="76.4" r="1.15" fill="#fff"/><ellipse cx="76" cy="78" rx="3.3" ry="4.3" fill="#1a1b23"/><circle cx="77.1" cy="76.4" r="1.15" fill="#fff"/>
+<path d="M55 90q9 8 18 0" stroke="#8a4a3c" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+
+</g></svg>

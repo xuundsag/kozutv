@@ -1,0 +1,548 @@
+[
+  {
+    "id": "21",
+    "anilistId": "21",
+    "type": "anime",
+    "title": "One Piece",
+    "year": "1999",
+    "rating": 8.73,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/f899139df5e1059396431415e770c6dd.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/2rmK7mnchw9Xr3XdiTFSxTTLXqv.jpg",
+    "description": "Years ago, the fearsome Pirate King, Gol D. Roger was executed leaving a huge pile of treasure and the famous \"One Piece\" behind. Whoever claims the \"One Piece\" will be named the new King of the Pirates.\n\nMonkey D. Luffy, a boy who consumed a \"Devil Fruit,\" decides to follow in the footsteps of his idol, the pirate Shanks, and find the One Piece. It helps, of course, that his body has the properties of rubber and that he's surrounded by a bevy of skilled fighters and thieves to help him along the way.\n\nLuffy will do anything to get the One Piece and become King of the Pirates!",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Drama",
+      "Fantasy",
+      "Shounen"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-21.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/cMD9Ygz11zjJzAovURpO75Qg7rT.jpg"
+  },
+  {
+    "id": "1263337",
+    "type": "movie",
+    "title": "Heart of the Beast",
+    "year": "2026",
+    "rating": 7.3,
+    "poster": "https://image.tmdb.org/t/p/w500/6sYemVUn79UPKz1ZsSG6kPU4RVy.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/kpqsljPQtWqPKJBTAEtoXtQZ9Ko.jpg",
+    "description": "After a harrowing plane crash, Special Forces officer James Belmont and his combat dog, Odin, find themselves stranded deep in the Alaskan wilderness. Together, they are forced into a brutal fight for survival against the elements.",
+    "genres": [
+      "Adventure",
+      "Thriller"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-1263337.jpg"
+  },
+  {
+    "id": "61607",
+    "anilistId": "191832",
+    "type": "anime",
+    "title": "Link Click Season 3",
+    "year": "2026",
+    "rating": 8.56,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/aa36cb5967434d8290329d2e3db082be.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/w3agwUSMpJ4X9t1jGrDtqqRPjDQ.jpg",
+    "description": "The third season of Shiguang Dailiren.",
+    "genres": [
+      "Drama",
+      "Mystery",
+      "Supernatural",
+      "Thriller"
+    ],
+    "format": "ONA",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-61607.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/4PCQrhpAkZjo5K7rXHMOOa5NC5i.jpg"
+  },
+  {
+    "id": "1423191",
+    "type": "movie",
+    "title": "Resident Evil",
+    "year": "2026",
+    "rating": 7.5,
+    "poster": "https://image.tmdb.org/t/p/w500/gAgWJhUSQWCgtKR8170nMkYlBda.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+    "description": "Medical courier Bryan unwittingly finds himself fighting for survival as one fateful, horrifying night collapses around him in chaos.",
+    "genres": [
+      "Horror",
+      "Science Fiction",
+      "Adventure"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-1423191.jpg"
+  },
+  {
+    "id": "289517",
+    "type": "tv",
+    "title": "Dead-End Job",
+    "year": "2026",
+    "rating": 7.7,
+    "poster": "https://image.tmdb.org/t/p/w500/wUvzMC7EToPgci31ZZRCeqCmQ6d.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/gWedDgBsZkuOho2qe3q2sTQmbpO.jpg",
+    "description": "Drowning in debt, a young man takes lucrative part-time jobs from a mysterious agency — only to find his hustle for more money turning nightmarish.",
+    "genres": [
+      "Mystery"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-289517.jpg"
+  },
+  {
+    "id": "1294189",
+    "type": "movie",
+    "title": "The Mongoose",
+    "year": "2026",
+    "rating": 5.9,
+    "poster": "https://image.tmdb.org/t/p/w500/eSS5mvSG84UUuvtbHel5Yu3Wik4.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/bySCyjQXNPgsnLTlgJpSMnRazPD.jpg",
+    "description": "A falsely accused war hero with nothing to lose leads police on an epic televised cross-country car chase, helped by members of his former Special Forces Army battalion and closely monitored by a fascinated public rooting for his safe getaway.",
+    "genres": [
+      "Action",
+      "Thriller"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-1294189.jpg"
+  },
+  {
+    "id": "313369",
+    "type": "movie",
+    "title": "La La Land",
+    "year": "2016",
+    "rating": 7.9,
+    "poster": "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/nlPCdZlHtRNcF6C9hzUH4ebmV1w.jpg",
+    "description": "Mia, an aspiring actress, serves lattes to movie stars in between auditions and Sebastian, a jazz musician, scrapes by playing cocktail party gigs in dingy bars, but as success mounts they are faced with decisions that begin to fray the fragile fabric of their love affair, and the dreams they worked so hard to maintain in each other threaten to rip them apart.",
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Romance"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-313369.jpg"
+  },
+  {
+    "id": "1072790",
+    "type": "movie",
+    "title": "Anyone but You",
+    "year": "2023",
+    "rating": 6.7,
+    "poster": "https://image.tmdb.org/t/p/w500/5qHoazZiaLe7oFBok7XlUhg96f2.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/j9eOeLlTGoHoM8BNUJVNyWmIvCi.jpg",
+    "description": "After an amazing first date, Bea and Ben’s fiery attraction turns ice cold — until they find themselves unexpectedly reunited at a destination wedding in Australia. So they do what any two mature adults would do: pretend to be a couple.",
+    "genres": [
+      "Romance",
+      "Comedy"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-1072790.jpg"
+  },
+  {
+    "id": "666277",
+    "type": "movie",
+    "title": "Past Lives",
+    "year": "2023",
+    "rating": 7.7,
+    "poster": "https://image.tmdb.org/t/p/w500/k3waqVXSnvCZWfJYNtdamTgTtTA.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/7HR38hMBl23lf38MAN63y4pKsHz.jpg",
+    "description": "After decades apart, childhood friends Nora and Hae Sung are reunited in New York for one fateful weekend as they confront notions of destiny, love, and the choices that make a life.",
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-666277.jpg"
+  },
+  {
+    "id": "11036",
+    "type": "movie",
+    "title": "The Notebook",
+    "year": "2004",
+    "rating": 7.9,
+    "poster": "https://image.tmdb.org/t/p/w500/rNzQyW4f8B8cQeg7Dgj3n6eT5k9.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/zdXnJqBaGFVtLoPNuMeKfEYUViZ.jpg",
+    "description": "An epic love story centered around an older man who reads aloud to a woman with Alzheimer's. From a faded notebook, the old man's words bring to life the story about a couple who is separated by World War II, and is then passionately reunited, seven years later, after they have taken different paths.",
+    "genres": [
+      "Romance",
+      "Drama"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-11036.jpg"
+  },
+  {
+    "id": "894803",
+    "type": "movie",
+    "title": "Sita Ramam",
+    "year": "2022",
+    "rating": 7.8,
+    "poster": "https://image.tmdb.org/t/p/w500/t1O94ZBzsQXJihtVkrsStRLyUDR.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/28EqsZDeEAy4VMZfrYbiyJZznKn.jpg",
+    "description": "Afreen, a rebellious Pakistani student sets ablaze the car of an Indian in London. Angered Afreen returns to Pakistan to ask for money from her grandfather that she has to pay in a month's time as damages. However, she gets to know that he is no more and the only thing he has left for her is a letter-delivering task, written by Ram to Sita. As Afreen sets out to find Ram, there begins her journey of discovering the secret behind the 20-year-old letter.",
+    "genres": [
+      "History",
+      "Romance",
+      "Drama"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-894803.jpg"
+  },
+  {
+    "id": "215720",
+    "type": "tv",
+    "title": "Queen of Tears",
+    "year": "2024",
+    "rating": 8.4,
+    "poster": "https://image.tmdb.org/t/p/w500/7ZXLZ3KYL3IVvsSHBZaHjcNQzNU.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/wcP3FsRLog4GNEs9PFrDKKQdcof.jpg",
+    "description": "The queen of department stores and the prince of supermarkets weather a marital crisis—until love miraculously begins to bloom again.",
+    "genres": [
+      "Drama",
+      "Comedy"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-215720.jpg"
+  },
+  {
+    "id": "91239",
+    "type": "tv",
+    "title": "Bridgerton",
+    "year": "2020",
+    "rating": 8,
+    "poster": "https://image.tmdb.org/t/p/w500/uXTg565ahu9RwonCX1V2Hex1NU6.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/6umsRLI7t0ydFwCl0JNEIO0q2LH.jpg",
+    "description": "Wealth, lust, and betrayal set in the backdrop of Regency era England, seen through the eyes of the powerful Bridgerton family.",
+    "genres": [
+      "Drama"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-91239.jpg"
+  },
+  {
+    "id": "48736",
+    "anilistId": "132405",
+    "type": "anime",
+    "title": "My Dress-Up Darling",
+    "year": "2022",
+    "rating": 8.34,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/4410a22591c15bc707367093e5b8e8df.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/sxBC3GJI1PZXpwb0xAYRxLL4nja.jpg",
+    "description": "High schooler Wakana Gojo wants to become a kashirashi—a master craftsman who makes traditional Japanese Hina dolls. Though he's gung-ho about the craft, he knows nothing about the latest trends, and has a hard time fitting in with his class. The popular kids—especially one girl, Marin Kitagawa—seem like they live in a completely different world. That all changes one day, when she shares an unexpected secret with him, and their completely different worlds collide.",
+    "genres": [
+      "Comedy",
+      "Ecchi",
+      "Romance",
+      "Slice of Life"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-48736.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/wzzLEUUrBT3Hr0FF9HrXxV6CsBF.jpg"
+  },
+  {
+    "id": "42897",
+    "anilistId": "124080",
+    "type": "anime",
+    "title": "Horimiya",
+    "year": "2021",
+    "rating": 8.5,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/16f88bcb1b253282c0414e4539984174.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/ldUbhEbyI28M6PiAkL0hZ2o8bOT.jpg",
+    "description": "A secret life is the one thing they have in common. At school, Hori is a prim and perfect social butterfly, but the truth is she's a brash homebody. Meanwhile, under a gloomy facade, Miyamura hides a gentle heart, along with piercings and tattoos. In a chance meeting, they both reveal a side they've never shown. Could this blossom into something new?",
+    "genres": [
+      "Comedy",
+      "Romance",
+      "School",
+      "Shounen",
+      "Slice of Life"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-42897.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/rzEB0XkY6Jjv5BQqOIGIdu1wfkx.jpg"
+  },
+  {
+    "id": "37999",
+    "anilistId": "101921",
+    "type": "anime",
+    "title": "Kaguya-sama: Love Is War",
+    "year": "2019",
+    "rating": 8.4,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/202cb962ac59075b964b07152d234b70.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/dJ8yrSokdTMnhKJw06MllSfCegb.jpg",
+    "description": "Considered a genius due to having the highest grades in the country, Miyuki Shirogane leads the prestigious Shuchiin Academy's student council as its president, working alongside the beautiful and wealthy vice president Kaguya Shinomiya. The two are often regarded as the perfect couple by students despite them not being in any sort of romantic relationship.",
+    "genres": [
+      "Comedy",
+      "Psychological",
+      "Romance",
+      "School",
+      "Seinen"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-37999.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/9aYARXyVv7XNs8cyZo7qPYmdnjQ.jpg"
+  },
+  {
+    "id": "57181",
+    "anilistId": "170942",
+    "type": "anime",
+    "title": "Blue Box",
+    "year": "2024",
+    "rating": 8.32,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/62d3acf0e33805d5309154e95195fea1.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/8p39Ud6ZKMixBQ7R4frg2o3idzc.jpg",
+    "description": "Taiki Inomata loves badminton, but he has a long way to go before he can reach nationals. When Taiki sees upperclassman Chinatsu Kano practicing her heart out on the girls’ basketball team, he falls for her hard. After an unexpected turn of events brings the two closer together, sports might not be the first thing on their minds anymore!",
+    "genres": [
+      "Romance",
+      "Sports"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-57181.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/aWco9BuJ5sSiQXviYh7JdObOYdA.jpg"
+  },
+  {
+    "id": "693134",
+    "type": "movie",
+    "title": "Dune: Part Two",
+    "year": "2024",
+    "rating": 8.1,
+    "poster": "https://image.tmdb.org/t/p/w500/6izwz7rsy95ARzTR3poZ8H6c5pp.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/eZ239CUp1d6OryZEBPnO2n87gMG.jpg",
+    "description": "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, Paul endeavors to prevent a terrible future only he can foresee.",
+    "genres": [
+      "Science Fiction",
+      "Adventure"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-693134.jpg"
+  },
+  {
+    "id": "157336",
+    "type": "movie",
+    "title": "Interstellar",
+    "year": "2014",
+    "rating": 8.5,
+    "poster": "https://image.tmdb.org/t/p/w500/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/8sNiAPPYU14PUepFNeSNGUTiHW.jpg",
+    "description": "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Science Fiction"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-157336.jpg"
+  },
+  {
+    "id": "872906",
+    "type": "movie",
+    "title": "Jawan",
+    "year": "2023",
+    "rating": 7,
+    "poster": "https://image.tmdb.org/t/p/w500/jFt1gS4BGHlK8xt76Y81Alp4dbt.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/5LtSjMNw6j3LkG29Oa4O0iY5U8.jpg",
+    "description": "An emotional journey of a prison warden, driven by a personal vendetta while keeping up to a promise made years ago, recruits inmates to commit outrageous crimes that shed light on corruption and injustice, in an attempt to get even with his past,  and that leads him to an unexpected reunion.",
+    "genres": [
+      "Action",
+      "Thriller"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-872906.jpg"
+  },
+  {
+    "id": "533535",
+    "type": "movie",
+    "title": "Deadpool & Wolverine",
+    "year": "2024",
+    "rating": 7.6,
+    "poster": "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/by8z9Fe8y7p4jo2YlW2SZDnptyT.jpg",
+    "description": "A listless Wade Wilson toils away in civilian life with his days as the morally flexible mercenary, Deadpool, behind him. But when his homeworld faces an existential threat, Wade must reluctantly suit-up again with an even more reluctant Wolverine.",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Science Fiction"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-533535.jpg"
+  },
+  {
+    "id": "414906",
+    "type": "movie",
+    "title": "The Batman",
+    "year": "2022",
+    "rating": 7.7,
+    "poster": "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/rvtdN5XkWAfGX6xDuPL6yYS2seK.jpg",
+    "description": "In his second year of fighting crime, Batman uncovers corruption in Gotham City that connects to his own family while facing a serial killer known as the Riddler.",
+    "genres": [
+      "Crime",
+      "Mystery",
+      "Thriller"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-414906.jpg"
+  },
+  {
+    "id": "546554",
+    "type": "movie",
+    "title": "Knives Out",
+    "year": "2019",
+    "rating": 7.8,
+    "poster": "https://image.tmdb.org/t/p/w500/pThyQovXQrw2m0s9x82twj48Jq4.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/4HWAQu28e2yaWrtupFPGFkdNU7V.jpg",
+    "description": "When renowned crime novelist Harlan Thrombey is found dead at his estate just after his 85th birthday, the inquisitive and debonair Detective Benoit Blanc is mysteriously enlisted to investigate. From Harlan's dysfunctional family to his devoted staff, Blanc sifts through a web of red herrings and self-serving lies to uncover the truth behind Harlan's untimely death.",
+    "genres": [
+      "Comedy",
+      "Crime",
+      "Mystery"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-546554.jpg"
+  },
+  {
+    "id": "762441",
+    "type": "movie",
+    "title": "A Quiet Place: Day One",
+    "year": "2024",
+    "rating": 6.6,
+    "poster": "https://image.tmdb.org/t/p/w500/hU42CRk14JuPEdqZG3AWmagiPAP.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/6XjMwQTvnICBz6TguiDKkDVHvgS.jpg",
+    "description": "As New York City is invaded by alien creatures who hunt by sound, a woman named Sam fights to survive with her cat.",
+    "genres": [
+      "Horror",
+      "Science Fiction",
+      "Thriller"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-762441.jpg"
+  },
+  {
+    "id": "569094",
+    "type": "movie",
+    "title": "Spider-Man: Across the Spider-Verse",
+    "year": "2023",
+    "rating": 8.3,
+    "poster": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/kVd3a9YeLGkoeR50jGEXM6EqseS.jpg",
+    "description": "After reuniting with Gwen Stacy, Brooklyn’s full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters the Spider Society, a team of Spider-People charged with protecting the Multiverse's very existence. But when the heroes clash on how to handle a new threat, Miles finds himself pitted against the other Spiders and must set out on his own to save those he loves most.",
+    "genres": [
+      "Animation",
+      "Action",
+      "Adventure",
+      "Science Fiction"
+    ],
+    "spotlightBanner": "/images/spotlight/movie-569094.jpg"
+  },
+  {
+    "id": "66732",
+    "type": "tv",
+    "title": "Stranger Things",
+    "year": "2016",
+    "rating": 8.5,
+    "poster": "https://image.tmdb.org/t/p/w500/uOOtwVbSr4QDjAGIifLDwpb2Pdl.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/9P4IIMYY3HifqeruZq0ZZ9g7YUi.jpg",
+    "description": "When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.",
+    "genres": [
+      "Action & Adventure",
+      "Mystery",
+      "Sci-Fi & Fantasy"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-66732.jpg"
+  },
+  {
+    "id": "93405",
+    "type": "tv",
+    "title": "Squid Game",
+    "year": "2021",
+    "rating": 7.9,
+    "poster": "https://image.tmdb.org/t/p/w500/1QdXdRYfktUSONkl1oD5gc6Be0s.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/5aE1kxWg6RhgQxJTXTxifv4uq7P.jpg",
+    "description": "Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits — with deadly high stakes.",
+    "genres": [
+      "Action & Adventure",
+      "Mystery",
+      "Drama"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-93405.jpg"
+  },
+  {
+    "id": "119051",
+    "type": "tv",
+    "title": "Wednesday",
+    "year": "2022",
+    "rating": 8.3,
+    "poster": "https://image.tmdb.org/t/p/w500/9PFonBhy4cQy7Jz20NpMygczOkv.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg",
+    "description": "Smart, sarcastic and a little dead inside, Wednesday Addams investigates twisted mysteries while making new friends — and foes — at Nevermore Academy.",
+    "genres": [
+      "Sci-Fi & Fantasy",
+      "Mystery",
+      "Comedy"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-119051.jpg"
+  },
+  {
+    "id": "94605",
+    "type": "tv",
+    "title": "Arcane",
+    "year": "2021",
+    "rating": 8.7,
+    "poster": "https://image.tmdb.org/t/p/w500/87C0wecB8bHb1PsrKBI4kJiEkgV.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/5cvnxEHT3e39DvT6ARw4GNCFrB0.jpg",
+    "description": "Amid the stark discord of twin cities Piltover and Zaun, two sisters fight on rival sides of a war between magic technologies and clashing convictions.",
+    "genres": [
+      "Animation",
+      "Action & Adventure",
+      "Sci-Fi & Fantasy"
+    ],
+    "spotlightBanner": "/images/spotlight/tv-94605.jpg"
+  },
+  {
+    "id": "52991",
+    "anilistId": "154587",
+    "type": "anime",
+    "title": "Frieren: Beyond Journey's End",
+    "year": "2023",
+    "rating": 9.36,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/bb6d2babd7797d94d8f4a8600bc9b44e.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/rBOnrVlck7BIlGeWVlzYiZeg4l2.jpg",
+    "description": "After the party of heroes defeated the Demon King, they restored peace to the land and returned to lives of solitude. Generations pass, and the elven mage Frieren comes face to face with humanity's mortality. She takes on a new apprentice and promises to fulfill old friends' dying wishes. Can an elven mind make peace with the nature of life and death? Frieren embarks on her quest to find out.",
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Fantasy",
+      "Shounen"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-52991.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/2IGeAnIbToKIalm624kd0OVD7Iv.jpg"
+  },
+  {
+    "id": "52299",
+    "anilistId": "151807",
+    "type": "anime",
+    "title": "Solo Leveling",
+    "year": "2024",
+    "rating": 8.39,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/53adb96c287c3931b3bc41cebb003788.png",
+    "backdrop": "https://image.tmdb.org/t/p/original/xMNH87maNLt9n2bMDYeI6db5VFm.jpg",
+    "description": "They say whatever doesn’t kill you makes you stronger, but that’s not the case for the world’s weakest hunter Sung Jinwoo. After being brutally slaughtered by monsters in a high-ranking dungeon, Jinwoo came back with the System, a program only he could see, that’s leveling him up in every way. Now, he’s inspired to discover the secrets behind his powers and the dungeon that spawned them.",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-52299.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/9ehJKIH2nNmyAgz7ZZEq9TayQDD.jpg"
+  },
+  {
+    "id": "57334",
+    "anilistId": "132029",
+    "type": "anime",
+    "title": "Dandadan",
+    "year": "2024",
+    "rating": 8.75,
+    "poster": "https://cdn.anipixcdn.co/thumbnail/56705e032d3b13b849ca05bb7799013e.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/uNTrRKIOyKYISthoeizghtXPEOK.jpg",
+    "description": "In a bet to prove whether ghosts or aliens exist, two high schoolers face terrifying paranormal threats, gain superpowers and maybe even fall in love?!",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Supernatural"
+    ],
+    "format": "TV",
+    "isMovie": false,
+    "spotlightBanner": "/images/spotlight/anime-57334.jpg",
+    "spotlightHighRes": "https://image.tmdb.org/t/p/original/4h2m9BO7milJaCsbKBgKvCX0dOZ.jpg"
+  }
+]

@@ -1,0 +1,2 @@
+# V33 — restore old Megaplay controls
+Restored the pre-V28 Megaplay stylesheet from the existing original local source and original settings icon; retained later fixes for account preferences, transcription and playhead position. Seek rail is 3px even when hovered/scrubbing; playhead stays visible whenever controls are visible. Retains V32 recommendations and other site improvements. Playwright real local One Piece playback checked inline mobile, 35% position without scrubbing, and fullscreen. Not deployed.

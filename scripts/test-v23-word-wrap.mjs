@@ -1,0 +1,10 @@
+import {chromium} from 'playwright';import assert from 'node:assert/strict';
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});try{
+ for(const width of [390,844,1280]){const p=await browser.newPage({viewport:{width,height:800}});
+ const description='Ajjajajjwbbshwjwjnwnwnwjwjwk jajajajajajajajajajjakakajjaja Jjjjdjdkkdkdjdjdjejskakakakkaka jjoNsjakajjwjwjjwjwjw '.repeat(14);
+ await p.route('**/api/**',async r=>{let u=new URL(r.request().url()),v={items:[],watchlist:[],history:[]};if(u.pathname==='/api/auth/me')v={user:null};if(u.pathname==='/api/detail')v={item:{id:'11',type:'movie',title:'Test Film',isMovie:true,genres:[],description},seasons:[],episodes:[]};if(u.pathname==='/api/reactions')v={likes:0,dislikes:0,mine:0,available:true};await r.fulfill({contentType:'application/json',body:JSON.stringify(v)})});
+ await p.goto('http://localhost:3011/watch/movie/11');await p.waitForSelector('.np-desc');await p.locator('.np-desc').click();
+ let result=await p.locator('.np-desc').evaluate(el=>{let text=el.firstChild,range=document.createRange(),rows=[];for(let i=0;i<text.length;i++){range.setStart(text,i);range.setEnd(text,i+1);let r=range.getBoundingClientRect();if(!rows.length||Math.abs(rows.at(-1).top-r.top)>1)rows.push({top:r.top,first:i,last:i,right:r.right});else{rows.at(-1).last=i;rows.at(-1).right=r.right}}return {rows:rows.slice(0,4),width:el.getBoundingClientRect().width,right:el.getBoundingClientRect().right,break:getComputedStyle(el).wordBreak,text:text.textContent}});
+ assert.equal(result.break,'break-all');assert.ok(result.rows.length>1);assert.ok(result.rows.slice(0,3).some((row,i)=>result.text[row.last]!==' '&&result.text[result.rows[i+1].first]!==' '),'must split a word');for(const row of result.rows.slice(0,3))assert.ok(result.right-row.right<20,'unused room '+JSON.stringify(row));
+ await p.locator('.np-desc').scrollIntoViewIfNeeded();await p.screenshot({path:`/home/user/screenshots/v23-word-wrap-${width}.png`});console.log('PASS',width,'word splits, unused first-line px',Math.round(result.right-result.rows[0].right));await p.close();}
+}finally{await browser.close()}

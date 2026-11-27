@@ -1,0 +1,24 @@
+kozuTV V5.4.13 — STAGING UPGRADE CANDIDATE ONLY
+
+NOT A STANDALONE INSTALLER AND NOT APPROVED FOR PRODUCTION.
+
+The existing providers do not verify whether each dub is an official recording.
+This candidate rejects some explicitly marked fan/AI dubs but does NOT meet the
+strict official-only requirement. Do not deploy it as an official-dub-only
+release. Obtain approved/verified audio sources or exclude unverifiable dubs.
+
+For an isolated review, this ZIP is an overlay for the exact V5.4.12 release:
+  kozuTV-V5.4.12.zip
+  SHA-256 904919874c03829d83ba5a753528a8cf0614bae8eb1c67f856a0e6fdfdb73f6f
+
+Extract V5.4.12 into a disposable test directory first, then overlay this ZIP.
+Run npm ci with Node.js 20+, install Playwright Chromium if needed, and run
+npm test. Read README.md and V5.4.13-Resource-and-QA-Report.md before testing
+AI transcription. NVIDIA use requires a private key and may incur charges.
+
+This overlay contains source, curated spotlight/attribution data, test scripts,
+license notices, the new offline Screenshot-V5.4.13.html and the QA report.
+It deliberately excludes node_modules, API keys, uploads and runtime files
+(data/states.json, data/user.json, data/cache-token.key and cache-tokens.json).
+It does not remove or replace the older Screenshot.html from the base release.
+Back up all existing runtime data before any later, explicitly approved upgrade.

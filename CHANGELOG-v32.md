@@ -1,0 +1,2 @@
+# V32 — smaller inline mobile controls
+Removed the time display's border and background. At widths up to 600px when not fullscreen, reduced visual sizes of time, gear, fullscreen, center play, episode and double-tap skip indicators, retaining button hit areas and subtitle readability. Fullscreen sizing remains unchanged. Keyboard focus indicators remain available. Tested actual local playback with Playwright in 360px inline and fullscreen; not deployed.

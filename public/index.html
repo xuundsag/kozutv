@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>KozuTV - Watch Free Anime, Movies &amp; Series Online in HD Sub &amp; Dub</title>
+  <meta name="description" content="Watch thousands of HD anime episodes in English Sub &amp; Dub alongside trending movies and web series for free on KozuTV. Fast multi-audio streaming, daily updates, and zero sign-ups.">
+  <meta property="og:site_name" content="KozuTV">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="KozuTV - Watch Free Anime, Movies &amp; Series Online in HD Sub &amp; Dub">
+  <meta property="og:description" content="Stream HD anime series &amp; movies in English Sub and Dub, plus hit films and web series — free, fast, and updated daily on KozuTV.">
+  <meta property="og:image" content="/images/kozutv-banner.jpg?v=5.4.19">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KozuTV - Watch Free Anime, Movies &amp; Series Online in HD Sub &amp; Dub">
+  <meta name="twitter:description" content="Stream HD anime series &amp; movies in English Sub and Dub, plus hit films and web series — free, fast, and updated daily on KozuTV.">
+  <meta name="twitter:image" content="/images/kozutv-banner.jpg?v=5.4.19">
+  <link rel="icon" href="/favicon.ico?v=5.4.19" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png?v=5.4.19">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png?v=5.4.19">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.4.19">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://image.tmdb.org">
+  <link rel="preconnect" href="https://cdn.anipixcdn.co">
+  <link rel="stylesheet" href="/style.css?v=5.4.19-v43">
+  <link rel="stylesheet" href="/vendor/video-js.min.css">
+  <link rel="stylesheet" href="/megaplay-controls.css?v=5.4.19-v43">
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <button class="menu-toggle-nav" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu-drop-panel">
+      <svg class="ui-icon menu-open-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.5 5.5h19a1.5 1.5 0 0 1 0 3h-19a1.5 1.5 0 0 1 0-3zM2.5 10.5h19a1.5 1.5 0 0 1 0 3h-19a1.5 1.5 0 0 1 0-3zM2.5 15.5h19a1.5 1.5 0 0 1 0 3h-19a1.5 1.5 0 0 1 0-3z"/></svg>
+      <svg class="ui-icon menu-close-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 4.2 12 9.5l5.3-5.3a1.77 1.77 0 1 1 2.5 2.5L14.5 12l5.3 5.3a1.77 1.77 0 1 1-2.5 2.5L12 14.5l-5.3 5.3a1.77 1.77 0 1 1-2.5-2.5L9.5 12 4.2 6.7a1.77 1.77 0 1 1 2.5-2.5z"/></svg>
+    </button>
+    <a class="brand" href="/browse" aria-label="KozuTV home"><img class="brand-logo" src="/images/kozutv-wordmark.png" alt="KozuTV" width="1600" height="504" fetchpriority="high" decoding="async"></a>
+    <div class="searchbox">
+      <svg class="ui-icon search-icon header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" placeholder="Search anime, movies &amp; series..." aria-label="Search titles" autocomplete="off"><kbd>/</kbd>
+    </div>
+    <div class="account" id="account-slot">
+      <button class="signin-btn" type="button" id="signin-btn" hidden>Sign in</button>
+      <button class="avatar-btn" type="button" id="avatar-btn" aria-label="Account menu" aria-expanded="false" aria-haspopup="menu" hidden>
+        <img class="avatar-img" id="avatar-img" alt="" width="34" height="34" decoding="async">
+        <span class="avatar-initials" id="avatar-initials" aria-hidden="true"></span>
+      </button>
+      <div class="account-menu" id="account-menu" role="menu" hidden>
+        <button class="account-menu-item" type="button" role="menuitem" id="logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+          Sign out
+        </button>
+      </div>
+    </div>
+    <nav class="menu-drop-panel" id="menu-drop-panel" hidden aria-label="Main menu"></nav>
+  </div>
+</header>
+<div class="login-overlay" id="login-overlay" hidden>
+  <div class="login-card" id="login-card" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <h1 id="login-title">Login or Register</h1>
+    <button class="login-discord" type="button" id="login-discord">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.25a18.3 18.3 0 0 0-5.48 0 12.6 12.6 0 0 0-.62-1.25.08.08 0 0 0-.08-.04c-1.71.3-3.35.81-4.89 1.52a.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.29 1.22-1.98a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.9.08.08 0 0 1-.01-.13l.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01l.37.29a.08.08 0 0 1-.01.13 12.3 12.3 0 0 1-1.87.9.08.08 0 0 0-.04.11c.36.69.77 1.35 1.22 1.98a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.95-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+      Authorise with Discord
+    </button>
+    <p class="login-note" id="login-note" hidden></p>
+  </div>
+</div>
+<main id="app"></main>
+<script src="/icons.js?v=5.4.19-v43"></script>
+<script src="/app.js?v=5.4.19-v43"></script>
+  <script src="/offline.js?v=5.4.19-v43" defer></script>
+</body>
+</html>

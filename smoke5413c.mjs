@@ -1,0 +1,18 @@
+import {chromium} from 'playwright';
+const b=await chromium.launch({headless:true,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
+const c=await b.newContext({viewport:{width:1280,height:800}}),p=await c.newPage();const errors=[];p.on('pageerror',e=>errors.push(String(e)));
+await c.addInitScript(()=>{localStorage.setItem('kozutv-autoplay','false');localStorage.setItem('kozutv-save-history','false')});
+await c.route('**/api/state',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({history:[],watchlist:[]})}));
+await p.goto('http://127.0.0.1:3000/settings');await p.waitForSelector('.settings-page');
+const note=await p.locator('.setting-note').innerText();const badge=await p.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--x')||'');
+await p.goto('http://127.0.0.1:3000/browse');await p.waitForSelector('.grid');await p.waitForTimeout(800);
+const rating=await p.evaluate(()=>{const r=document.querySelector('.rating');return r?getComputedStyle(r).boxShadow:null});
+const ratingPos=await p.evaluate(()=>{const r=document.querySelector('.rating');const s=getComputedStyle(r);return {shadow:s.boxShadow,transform:s.transform}});
+await p.goto('http://127.0.0.1:3000/watch/anime/11595?episode=2&lang=hi',{waitUntil:'domcontentloaded',timeout:30000});
+await p.waitForFunction(()=>{const v=window.videojs?.getPlayer('kozutv-video');return v?.megaUI&&v.readyState()>=2},{timeout:45000});
+await p.evaluate(()=>{const v=videojs.getPlayer('kozutv-video');v.pause();v.currentTime(132);v.megaUI.openSettings('cc')});
+await p.waitForTimeout(2500);
+const menu=await p.locator('.mp-track-list button').allTextContents();
+const disclosure=await p.locator('.mp-ai-disclosure').count();
+console.log(JSON.stringify({settingsNote:note.slice(0,90),rating:ratingPos,hiMenu:menu,disclosure,errors},null,2));
+await b.close();
