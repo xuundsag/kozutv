@@ -49,6 +49,23 @@ The archive used `kozutv.bond`, which is not currently linked to this project.
 If moving to that domain, configure its Vercel/DNS mapping and update both these
 variables and Discord's allowed redirects before redeploying.
 
+## GitHub integration fallback
+
+The connected Vercel account has no GitHub account linked, so Git-sourced deploys
+are rejected. A small uploaded build package can fetch the public repository at
+an exact commit and produce Vercel Build Output API v3 output instead. The build
+script is preserved as `scripts/vercel-build-from-github.mjs`; run it only in a
+disposable build directory. The initial deployment pins application commit
+`aada2163a20c67a51e8706971fc67120c3453876`.
+
+Automatic deployment on GitHub pushes is **not enabled**. Link GitHub in Vercel
+and import this repository to enable that workflow. The source branch is
+`arena/56f1fe70-kozutv`; `main` remains unchanged until its pull request is merged.
+
+Vercel deployment protection is enabled on the existing project. A protected URL
+requires the owner's Vercel login; make the project public in its deployment
+protection settings if anonymous visitors should have access.
+
 ## Verification
 
 ```
