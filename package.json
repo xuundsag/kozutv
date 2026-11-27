@@ -1,0 +1,34 @@
+{
+  "name": "kozutv",
+  "version": "5.4.19",
+  "description": "kozuTV \u2014 Watch Free Anime (Sub & Dub), Movies & Web Series Online in HD",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --env-file-if-exists=.env server.js",
+    "test:viewer": "node scripts/test-viewer-settings.mjs",
+    "test:genre": "node scripts/test-genre-cache.mjs",
+    "test:history": "node scripts/test-history-audio.mjs",
+    "test": "npm run test:history && npm run test:dubs && npm run test:viewer && npm run test:genre && npm run test:ai",
+    "test:ai": "node scripts/test-v5413.mjs",
+    "test:dubs": "node scripts/test-v5413d.mjs"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.7",
+    "@grpc/proto-loader": "^0.8.1",
+    "@indic-transliteration/sanscript": "^1.3.3",
+    "freekeys": "^0.0.4",
+    "mongodb": "^6.22.0",
+    "pg": "^8.23.1",
+    "playwright": "^1.64.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0"
+  },
+  "overrides": {
+    "@indic-transliteration/sanscript": {
+      "toml": "5.0.1"
+    }
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

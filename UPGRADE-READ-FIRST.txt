@@ -1,0 +1,105 @@
+kozuTV V5.4.18 — upgrade notes
+================================
+
+What changed in this release
+----------------------------
+1.  Site icons are Microsoft Fluent System Icons (24 px, solid / rounded, MIT
+    licensed) in public/icons.js: orange for the menu, section titles and
+    poster hover rings, white stroke for the header and metadata rows.
+2.  The side menu is a flat list: Home, Schedule, Random title, Advanced
+    filters, Upcoming anime, Settings. Explore and its sub-lists are gone.
+3.  Caption text changes no longer flicker (no per-line animation, one poll tick
+    of bridging, no empty frame between cues), and Hinglish/Banglish romanization
+    now spells English loanwords properly ("practice", "chocolate", "teacher",
+    ...) instead of "praiktis"/"cakalet".
+4.  Spotlight swipe direction is fixed: dragging left advances, dragging right
+    goes back (content follows the finger). The drag no longer opens the slide.
+5.  MongoDB is read from .env and reports its state on boot.
+6.  The AI Transcription switch and every AI caption warning are gone from
+    Settings. No "AI captions unavailable" messages exist anywhere.
+7.  Schedule is all media: AniList anime plus TMDB's on-the-air TV shows, merged
+    onto one timeline and titled simply "Schedule".
+8.  Language switching repaints and refreshes captions immediately (a single tap
+    is enough); stale caption choices are dropped when the audio changes; the
+    English (AI) row is gone for Japanese audio (provider English only); Signs &
+    Songs is anime-only.
+9.  Footer shows the logo only — no text.
+10. Favicon is the orange k on a transparent background (ico + 32 + 192 + apple).
+11. The OS media notification carries the show's wide artwork and reads
+    "S1 E1 : Title" (or "E1 : Title" when a show has no season).
+12. Banner and wordmark use the original uploaded logo again
+    (images/kozutv-logo.png, images/kozutv-wordmark.png, images/kozutv-banner.jpg).
+    The banner is now the anime group art with the logo large and centred; the
+    favicon is the logo's K glyph on a transparent background.
+13. A wrong Cache Token no longer prints a sentence: the field shakes, takes a
+    thin red border and shows a cross.
+14. AI caption failures retry silently in the background (3 attempts) and then
+    simply disappear — no unavailable message, no dead menu entry.
+
+Install
+-------
+    npm ci --omit=dev
+    npm start            # PORT defaults to 3000
+
+The archive includes .env (MongoDB + NVIDIA keys). Keep it private.
+
+Verification
+------------
+    npm test             # 23 checks across dubs, tokens, persistence, viewer,
+                         # genre cache, feature and AI-caption suites
+
+Browser suites need Chromium's shared libraries. If `playwright` reports a
+missing libnspr4.so, install the distribution packages or point
+LD_LIBRARY_PATH at a directory that has them.
+
+--- V5.4.15: brand corrections -------------------------------------------
+15. The original uploaded logo (white KOZU + orange extrusion, orange TV)
+    is used again for the header, footer and gallery: images/kozutv-logo.png
+    and images/kozutv-wordmark.png. The re-typed wordmark is retired.
+16. White stroke glyphs are back on the header (search, watchlist) and on
+    every metadata row / rating pill. Menu and section icons stay orange;
+    section headings use the original V5.4.13 stroke glyphs.
+17. Spotlight no longer prints genre names - the meta line is
+    type - year - HD - rating.
+18. New banner: images/kozutv-banner.jpg is the anime group artwork with
+    the logo large and centred (1200x630, also used as the og:image).
+19. The favicon is the logo's K glyph on a transparent background:
+    public/favicon.ico plus images/favicon-32/192/512.png and
+    apple-touch-icon.png.
+
+--- V5.4.16: Discord Rich Presence, schedule, spotlight ----------------
+20. Settings gains a Discord card (discord-rpc.js + DISCORD-SETUP.md).
+    Connect your account with OAuth2 (scope identify) and the card shows your
+    avatar and @username. "Enable Discord Rich Presence" is disabled until you
+    connect and sits as a single bold row with no caption, like the other
+    settings rows. The card icon and the Connect button are orange. While it is on, your profile reads: Watching kozuTV / title /
+    episode, with an elapsed timer and a "Watch on kozuTV" button.
+    Needs DISCORD_CLIENT_ID + DISCORD_CLIENT_SECRET in .env and the Discord
+    DESKTOP app running on the same machine. There is no bot to create.
+    Dormant (and invisible in behaviour) until those two keys are set.
+21. Schedule rows are back to the V5.4.13 shape: the right-hand column shows
+    the countdown ("in 3 hours"), refreshed every 30 s, with a small Anime/TV
+    tag next to the title. TV series are still included - nothing was removed.
+22. The Spotlight watchlist button uses the original stroke bookmark again
+    instead of the flat solid one.
+
+--- V5.4.17: presence now works from a hosted site --------------------
+23. Discord presence no longer depends on the kozuTV server having a Discord
+    client. /api/discord/status reports relay:"desktop" or relay:"browser":
+      desktop - the server writes the IPC frames itself (unchanged).
+      browser - the server hands the exact activity to the page, which
+                publishes it through relay/kozutv-discord-relay.mjs on the
+                user's own machine (ws://127.0.0.1:6463).
+    Start it with:  node relay/kozutv-discord-relay.mjs
+    There is still no way to publish presence without a Discord client on some
+    machine - that is Discord's design, not a missing feature. No self-bot, no
+    user token, no Social SDK.
+24. CSP connect-src now allows ws://127.0.0.1:6463 and ws://localhost:6463, the
+    loopback relay only.
+
+--- V5.4.18: the Discord helper installs itself ----------------------
+25. The helper no longer has to be started by hand. install/START-RELAY-WINDOWS.bat
+    (and install/START-RELAY-MAC-LINUX.sh) install it once, register it to run at
+    every sign-in, add a keep-alive, start it immediately and verify that
+    127.0.0.1:6463 answers. Both installers carry the relay inside themselves, so
+    a single file is enough. Same file with -Uninstall removes all of it.

@@ -1,0 +1,13 @@
+data/states.json
+data/user.json
+data/cache-token.key
+data/cache-tokens.json
+data/discord-links.json
+.env
+node_modules/
+.env.*
+!.env.example
+.arena/
+google_drive/
+.vercel/
+*.log

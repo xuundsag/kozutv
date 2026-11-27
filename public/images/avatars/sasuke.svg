@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-hidden="true" focusable="false">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f3760"/><stop offset="1" stop-color="#0b0e1e"/></linearGradient>
+<clipPath id="c"><circle cx="64" cy="64" r="64"/></clipPath></defs>
+<g clip-path="url(#c)">
+<rect width="128" height="128" fill="url(#g)"/>
+<path d="M64 103c-17 0-30 7-34 25h68c-4-18-17-25-34-25z" fill="#2c4079"/>
+<path d="M56 96h16v12H56z" fill="#f2d3b6" opacity=".92"/>
+<circle cx="64" cy="73" r="29" fill="#1b1f31"/><polygon points="25.7 65.7 41.2 59.5 42.3 46.8 55.0 48.1 64.0 34.0 73.0 48.1 85.7 46.8 86.8 59.5 102.3 65.7" fill="#1b1f31"/>
+<circle cx="64" cy="80" r="25" fill="#f2d3b6"/>
+
+<path d="M39 72c0-17 11-28 25-28s25 11 25 28l-9-10-3 12-5-14-8 15-8-15-5 14-3-12z" fill="#1b1f31"/>
+<circle cx="52" cy="78" r="4.4" fill="#cf2020"/><circle cx="52" cy="78" r="1.9" fill="#17181f"/><circle cx="52" cy="78" r="0.8" fill="#fff"/><circle cx="76" cy="78" r="4.4" fill="#cf2020"/><circle cx="76" cy="78" r="1.9" fill="#17181f"/><circle cx="76" cy="78" r="0.8" fill="#fff"/>
+<path d="M60 92h8" stroke="#8a4a3c" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+
+</g></svg>
