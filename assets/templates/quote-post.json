@@ -1,0 +1,132 @@
+{
+ "id": "quote-post",
+ "name": "quote post",
+ "desc": "aesthetic quote card",
+ "aspect": "4:5",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#000000"
+ },
+ "tracks": [
+  {
+   "id": "tr15j4r6",
+   "type": "video",
+   "name": "main",
+   "clips": [
+    {
+     "id": "i165196",
+     "type": "image",
+     "src": "asset:samples/gradient-forest.png",
+     "start": 0,
+     "duration": 8,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [],
+     "filter": {
+      "preset": "none"
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr17nf7u",
+   "type": "sticker",
+   "name": "stickers",
+   "clips": [
+    {
+     "id": "s18mjfx",
+     "type": "sticker",
+     "src": "asset:stickers/shapes/sparkle.png",
+     "start": 0,
+     "duration": 8,
+     "sticker": {
+      "anim": "float"
+     },
+     "transform": {
+      "x": -0.3,
+      "y": -0.3,
+      "scale": 0.55,
+      "rotation": 0,
+      "opacity": 0.9
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr19w3z8",
+   "type": "text",
+   "name": "quote",
+   "clips": [
+    {
+     "id": "t1asq6q",
+     "type": "text",
+     "start": 0.5,
+     "duration": 7,
+     "text": {
+      "content": "stay soft.\nthe world is loud enough already.",
+      "preset": "quote",
+      "size": 100,
+      "lineHeight": 1.5
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr1b7x2w",
+   "type": "audio",
+   "name": "music",
+   "clips": [
+    {
+     "id": "a1cww5j",
+     "type": "audio",
+     "src": "asset:sounds/lofi_chill.mp3",
+     "start": 0,
+     "duration": 8,
+     "in": 0,
+     "volume": 0.8,
+     "fadeIn": 0,
+     "fadeOut": 0.5
+    }
+   ]
+  }
+ ],
+ "duration": 8
+}

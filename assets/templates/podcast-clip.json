@@ -1,0 +1,181 @@
+{
+ "id": "podcast-clip",
+ "name": "podcast clip",
+ "desc": "captioned quote on dark",
+ "aspect": "9:16",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#000000"
+ },
+ "tracks": [
+  {
+   "id": "tr1um5ay",
+   "type": "video",
+   "name": "main",
+   "clips": [
+    {
+     "id": "i1vpr89",
+     "type": "image",
+     "src": "asset:samples/gradient-ocean.png",
+     "start": 0,
+     "duration": 8,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [],
+     "filter": {
+      "preset": "none",
+      "brightness": 0.55,
+      "saturation": 1.1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr1wx5i2",
+   "type": "sticker",
+   "name": "stickers",
+   "clips": [
+    {
+     "id": "s1xtzk0",
+     "type": "sticker",
+     "src": "asset:stickers/shapes/mic-drop.png",
+     "start": 0,
+     "duration": 8,
+     "sticker": {
+      "anim": "float"
+     },
+     "transform": {
+      "x": 0,
+      "y": -0.32,
+      "scale": 0.8,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr1yeuqz",
+   "type": "text",
+   "name": "captions",
+   "clips": [
+    {
+     "id": "t1zsnfg",
+     "type": "text",
+     "start": 0,
+     "duration": 2.6,
+     "text": {
+      "content": "the secret is",
+      "preset": "subtitle",
+      "size": 100
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.28,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "t20feca",
+     "type": "text",
+     "start": 2.6,
+     "duration": 2.6,
+     "text": {
+      "content": "just start before",
+      "preset": "subtitle",
+      "size": 100
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.28,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "t218b9k",
+     "type": "text",
+     "start": 5.2,
+     "duration": 2.6,
+     "text": {
+      "content": "you feel ready.",
+      "preset": "subtitle",
+      "size": 100
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.28,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr22480s",
+   "type": "audio",
+   "name": "music",
+   "clips": [
+    {
+     "id": "a23cxym",
+     "type": "audio",
+     "src": "asset:sounds/lofi_chill.mp3",
+     "start": 0,
+     "duration": 8,
+     "in": 0,
+     "volume": 0.8,
+     "fadeIn": 0,
+     "fadeOut": 0.5
+    }
+   ]
+  }
+ ],
+ "duration": 8
+}

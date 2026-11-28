@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b10">
+<meta name="description" content="Shoul Studio — server-side video editor. CapCut-style, runs in your browser, renders on your server.">
+<title>Shoul Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%2300e0d0'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='52' fill='%230b0b10' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<div id="homeView" class="view">
+  <header class="home-head">
+    <div class="brand"><span class="brand-mark">S</span> Shoul <em>studio</em></div>
+    <button class="icon-btn" id="btnHealth" title="server status">&#9679;</button>
+  </header>
+  <div class="home-scroll">
+    <button class="new-btn" id="btnNew">
+      <span class="plus">+</span>
+      <div><b>new project</b><small>start editing &middot; 9:16 &middot; 1:1 &middot; 4:5 &middot; 16:9</small></div>
+    </button>
+
+    <h3 class="sec-title">templates</h3>
+    <div class="tpl-row" id="tplRow"></div>
+
+    <h3 class="sec-title">my projects <span id="projCount"></span></h3>
+    <div class="proj-grid" id="projGrid"></div>
+    <div class="foot-note">all editing &amp; rendering happens on the server &middot; your device stays cool</div>
+  </div>
+
+  <div class="modal-wrap hidden" id="newModal">
+    <div class="sheet">
+      <div class="grab"></div>
+      <h3>new project</h3>
+      <input id="newName" type="text" placeholder="project name" value="my edit">
+      <div class="lbl">aspect</div>
+      <div class="chips" id="newAspect">
+        <button data-a="9:16" class="chip active">9:16</button>
+        <button data-a="1:1" class="chip">1:1</button>
+        <button data-a="4:5" class="chip">4:5</button>
+        <button data-a="16:9" class="chip">16:9</button>
+      </div>
+      <div class="lbl">optional template</div>
+      <div class="tpl-pick" id="newTpl"></div>
+      <button class="cta" id="btnCreate">create</button>
+      <button class="ghost-btn" id="btnCancelNew">cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EDITOR ============ -->
+<div id="editorView" class="view hidden">
+  <header class="ed-head">
+    <button class="icon-btn" id="btnBack">&#8592;</button>
+    <div class="ed-title" id="edName">project</div>
+    <div class="ed-aspect" id="edAspect">9:16</div>
+    <button class="export-pill" id="btnExport">&#8599; export</button>
+  </header>
+
+  <main class="ed-main">
+    <div class="stage-box" id="stageBox">
+      <img id="preview" alt="preview" draggable="false">
+      <div class="stage-busy hidden" id="stageBusy">rendering&#8230;</div>
+      <div class="stage-chip" id="stageChip">1080 &times; 1920 &middot; 30fps</div>
+    </div>
+    <div class="transport">
+      <button class="icon-btn big" id="btnPlay">&#9654;</button>
+      <div class="time" id="timeLabel">0:00.0 / 0:00.0</div>
+      <button class="icon-btn" id="btnToStart">&#9198;</button>
+      <button class="icon-btn" id="btnToEnd">&#9197;</button>
+    </div>
+
+    <!-- timeline -->
+    <div class="timeline" id="timeline">
+      <div class="tl-inner" id="tlInner">
+        <div class="ruler" id="ruler"></div>
+        <div id="tlTracks"></div>
+        <div class="playhead" id="playhead"></div>
+      </div>
+    </div>
+
+    <!-- bottom toolbar -->
+    <nav class="toolbar" id="toolbar">
+      <button data-sheet="media"><i>&#10133;</i><span>media</span></button>
+      <button data-sheet="templates"><i>&#9638;</i><span>templates</span></button>
+      <button data-sheet="edit"><i>&#9881;</i><span>edit</span></button>
+      <button data-sheet="text"><i>T</i><span>text</span></button>
+      <button data-sheet="stickers"><i>&#9786;</i><span>sticker</span></button>
+      <button data-sheet="overlay"><i>&#9974;</i><span>overlay</span></button>
+      <button data-sheet="audio"><i>&#9835;</i><span>audio</span></button>
+      <button data-sheet="filters"><i>&#9737;</i><span>filters</span></button>
+      <button data-sheet="effects"><i>&#10022;</i><span>effects</span></button>
+      <button data-sheet="transition"><i>&#8646;</i><span>transition</span></button>
+      <button data-sheet="canvas"><i>&#9639;</i><span>canvas</span></button>
+    </nav>
+  </main>
+
+  <!-- universal bottom sheet -->
+  <div class="sheet-wrap hidden" id="sheetWrap">
+    <div class="sheet-backdrop" id="sheetBackdrop"></div>
+    <div class="sheet" id="sheet">
+      <div class="grab"></div>
+      <div class="sheet-head">
+        <h3 id="sheetTitle">tools</h3>
+        <button class="icon-btn" id="sheetClose">&#10005;</button>
+      </div>
+      <div class="sheet-body" id="sheetBody"></div>
+    </div>
+  </div>
+
+  <!-- export sheet -->
+  <div class="sheet-wrap hidden" id="exportWrap">
+    <div class="sheet-backdrop" id="exportBackdrop"></div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <div class="sheet-head"><h3>export</h3><button class="icon-btn" id="exportClose">&#10005;</button></div>
+      <div class="sheet-body" id="exportBody"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
