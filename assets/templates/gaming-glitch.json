@@ -1,0 +1,147 @@
+{
+ "id": "gaming-glitch",
+ "name": "gaming glitch",
+ "desc": "glitch + rgb split + neon text",
+ "aspect": "9:16",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#000000"
+ },
+ "tracks": [
+  {
+   "id": "trx9joa",
+   "type": "video",
+   "name": "main",
+   "clips": [
+    {
+     "id": "vy054g",
+     "type": "video",
+     "src": "asset:samples/gradient-neon.mp4",
+     "start": 0,
+     "duration": 6,
+     "in": 0,
+     "speed": 1,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [
+      {
+       "id": "glitch",
+       "intensity": 0.7
+      },
+      {
+       "id": "rgbshift",
+       "intensity": 0.5
+      }
+     ],
+     "filter": {
+      "preset": "none"
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     },
+     "transition": {
+      "type": "none",
+      "dur": 0.5
+     },
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "trz7tmh",
+   "type": "sticker",
+   "name": "stickers",
+   "clips": [
+    {
+     "id": "s109och",
+     "type": "sticker",
+     "src": "asset:stickers/frames/glitch-bars.png",
+     "start": 0,
+     "duration": 6,
+     "sticker": {
+      "anim": "flash"
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 2.2,
+      "rotation": 0,
+      "opacity": 0.5
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr1154lx",
+   "type": "text",
+   "name": "text",
+   "clips": [
+    {
+     "id": "t12ovpt",
+     "type": "text",
+     "start": 0.4,
+     "duration": 4,
+     "text": {
+      "content": "GG WP",
+      "preset": "neon",
+      "size": 190
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr13ervr",
+   "type": "audio",
+   "name": "music",
+   "clips": [
+    {
+     "id": "a148yic",
+     "type": "audio",
+     "src": "asset:sounds/trap_808.mp3",
+     "start": 0,
+     "duration": 6,
+     "in": 0,
+     "volume": 0.8,
+     "fadeIn": 0,
+     "fadeOut": 0.5
+    }
+   ]
+  }
+ ],
+ "duration": 6
+}

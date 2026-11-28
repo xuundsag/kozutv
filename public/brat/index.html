@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="brat-style green screen lyric video maker — lime green background, stretched lowercase arial, instagram-style animations.">
+<title>brat generator — green screen lyric maker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%238ace00'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='700' font-size='58' fill='%23ffffff' text-anchor='middle'%3Eb%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="brat-word">brat generator</span>
+    <p class="hero-sub">green screen lyric videos, same font, same vibe. type your lines &rarr; pick the time &rarr; download the clip &rarr; add the song on instagram.</p>
+  </div>
+</header>
+
+<main class="app">
+  <aside class="panel">
+
+    <section class="card">
+      <div class="tabs" id="modeTabs">
+        <button data-mode="lyrics" class="tab active">lyrics</button>
+        <button data-mode="title" class="tab">song title</button>
+      </div>
+
+      <div id="titleWrap" class="hidden">
+        <label class="lbl" for="titleInput">text — big cover style</label>
+        <input id="titleInput" type="text" value="brat" autocomplete="off" spellcheck="false">
+      </div>
+
+      <div id="lyricsWrap">
+        <label class="lbl" for="lyricsInput">lyrics — one line per screen</label>
+        <textarea id="lyricsInput" rows="6" spellcheck="false">green screen summer
+it's so brat in here
+everybody's dancing
+ok bye &#9825;</textarea>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="lbl">format</span>
+      <div class="seg" id="aspectSeg">
+        <button data-aspect="9:16" class="active">story 9:16</button>
+        <button data-aspect="1:1">square 1:1</button>
+        <button data-aspect="4:5">post 4:5</button>
+      </div>
+
+      <span class="lbl">background</span>
+      <div class="swatches" id="swatches">
+        <button class="swatch active" data-bg="#8ace00" data-text="#ffffff" style="--c:#8ace00" title="brat green"></button>
+        <button class="swatch" data-bg="#00b140" data-text="#ffffff" style="--c:#00b140" title="chroma-key green (remove bg in ig)"></button>
+        <button class="swatch" data-bg="#111111" data-text="#ffffff" style="--c:#111111" title="black"></button>
+        <button class="swatch" data-bg="#f2f2f2" data-text="#111111" style="--c:#f2f2f2" title="white"></button>
+        <label class="swatch custom" title="custom color"><input type="color" id="customBg" value="#8ace00"></label>
+      </div>
+
+      <span class="lbl">animation</span>
+      <select id="animSelect">
+        <option value="scroll">scroll — lyric edit</option>
+        <option value="type">typewriter — ig text</option>
+        <option value="pop">pop in</option>
+        <option value="static">static poster</option>
+      </select>
+
+      <span class="lbl">time — clip length: <b id="durVal">15s</b></span>
+      <input type="range" id="durRange" min="3" max="60" step="1" value="15">
+
+      <div class="toggles">
+        <label class="chk"><input type="checkbox" id="lowercaseChk" checked> lowercase everything (brat style)</label>
+        <label class="chk"><input type="checkbox" id="loopChk" checked> loop preview</label>
+      </div>
+    </section>
+
+    <section class="card actions">
+      <button id="dlVideo" class="btn primary">&#11015; download video (<span id="vidExt">mp4</span>)</button>
+      <button id="dlPng" class="btn">&#11015; download cover png</button>
+      <button id="restartBtn" class="btn ghost">&#8635; restart preview</button>
+      <p class="hint" id="recHint">the clip is silent — open instagram, add your song, done. keep this tab visible while it records.</p>
+    </section>
+
+  </aside>
+
+  <section class="stage-area">
+    <div class="stage-wrap"><canvas id="stage" width="1080" height="1920"></canvas></div>
+    <div class="stage-transport">
+      <button id="btnPlay" class="btn play">&#9654;</button>
+    </div>
+    <div class="progress"><i id="progressBar"></i></div>
+    <div class="meta" id="metaLine"></div>
+  </section>
+</main>
+
+<footer class="foot">fan-made meme tool &middot; not affiliated with charli xcx or atlantic records &middot; everything runs locally in your browser</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+{
+ "id": "lyric-karaoke",
+ "name": "karaoke lyrics",
+ "desc": "word-by-word sing-along captions",
+ "aspect": "9:16",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#000000"
+ },
+ "tracks": [
+  {
+   "id": "tr6mosk",
+   "type": "video",
+   "name": "main",
+   "clips": [
+    {
+     "id": "v7bfoo",
+     "type": "video",
+     "src": "asset:samples/gradient-neon.mp4",
+     "start": 0,
+     "duration": 12,
+     "in": 0,
+     "speed": 1,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [],
+     "filter": {
+      "preset": "none"
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     },
+     "transition": {
+      "type": "none",
+      "dur": 0.5
+     },
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "tr8tj87",
+   "type": "text",
+   "name": "captions",
+   "clips": [
+    {
+     "id": "t99zly",
+     "type": "text",
+     "start": 0,
+     "duration": 4,
+     "text": {
+      "content": "we were dancing all night long",
+      "preset": "karaoke",
+      "size": 110
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.3,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "tacti4",
+     "type": "text",
+     "start": 4,
+     "duration": 4,
+     "text": {
+      "content": "under the electric sky",
+      "preset": "karaoke",
+      "size": 110
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.3,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "tbfcmt",
+     "type": "text",
+     "start": 8,
+     "duration": 4,
+     "text": {
+      "content": "and i would do it all again",
+      "preset": "karaoke",
+      "size": 110
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.3,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "trc8rax",
+   "type": "audio",
+   "name": "music",
+   "clips": [
+    {
+     "id": "ad1gqk",
+     "type": "audio",
+     "src": "asset:sounds/edm_pulse.mp3",
+     "start": 0,
+     "duration": 8,
+     "in": 0,
+     "volume": 0.8,
+     "fadeIn": 0,
+     "fadeOut": 0.5
+    }
+   ]
+  }
+ ],
+ "duration": 12
+}

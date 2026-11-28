@@ -1,0 +1,128 @@
+{
+ "id": "brat-lyric",
+ "name": "brat lyrics",
+ "desc": "green screen lyric edit, brat style",
+ "aspect": "9:16",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#8ace00"
+ },
+ "tracks": [
+  {
+   "id": "tr0qqh8",
+   "type": "video",
+   "name": "main",
+   "clips": []
+  },
+  {
+   "id": "tr1fo7n",
+   "type": "text",
+   "name": "lyrics",
+   "clips": [
+    {
+     "id": "t2art9",
+     "type": "text",
+     "start": 0,
+     "duration": 3,
+     "text": {
+      "content": "green screen summer",
+      "preset": "brat",
+      "font": "anton",
+      "size": 160,
+      "color": "#ffffff"
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "t3yxxz",
+     "type": "text",
+     "start": 3,
+     "duration": 3,
+     "text": {
+      "content": "it’s so brat in here",
+      "preset": "brat",
+      "font": "anton",
+      "size": 150
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "t4aeuu",
+     "type": "text",
+     "start": 6,
+     "duration": 3,
+     "text": {
+      "content": "no thoughts",
+      "preset": "brat",
+      "font": "anton",
+      "size": 170
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "t5ii8t",
+     "type": "text",
+     "start": 9,
+     "duration": 3,
+     "text": {
+      "content": "ok bye ♡",
+      "preset": "brat",
+      "font": "anton",
+      "size": 160
+     },
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  }
+ ],
+ "duration": 12
+}

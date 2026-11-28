@@ -1,0 +1,154 @@
+{
+ "id": "product-promo",
+ "name": "product promo",
+ "desc": "sale badge + bold offer",
+ "aspect": "9:16",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#000000"
+ },
+ "tracks": [
+  {
+   "id": "trowx1z",
+   "type": "video",
+   "name": "main",
+   "clips": [
+    {
+     "id": "ip01s4",
+     "type": "image",
+     "src": "asset:samples/gradient-ocean.png",
+     "start": 0,
+     "duration": 6,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [],
+     "filter": {
+      "preset": "none"
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "trq5cza",
+   "type": "sticker",
+   "name": "stickers",
+   "clips": [
+    {
+     "id": "sr7eut",
+     "type": "sticker",
+     "src": "asset:stickers/badges/sale.png",
+     "start": 0.3,
+     "duration": 5,
+     "sticker": {
+      "anim": "pulse"
+     },
+     "transform": {
+      "x": 0,
+      "y": -0.28,
+      "scale": 1.1,
+      "rotation": -6,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    },
+    {
+     "id": "sse0ee",
+     "type": "sticker",
+     "src": "asset:stickers/shapes/burst.png",
+     "start": 1.5,
+     "duration": 4,
+     "sticker": {
+      "anim": "wobble"
+     },
+     "transform": {
+      "x": 0.3,
+      "y": 0.28,
+      "scale": 0.7,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "trtj7z7",
+   "type": "text",
+   "name": "copy",
+   "clips": [
+    {
+     "id": "tuxcd5",
+     "type": "text",
+     "start": 0.5,
+     "duration": 5,
+     "text": {
+      "content": "50% OFF TODAY ONLY",
+      "preset": "tiktok",
+      "size": 120
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.22,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "trvvtxg",
+   "type": "audio",
+   "name": "music",
+   "clips": [
+    {
+     "id": "awiwjn",
+     "type": "audio",
+     "src": "asset:sounds/edm_pulse.mp3",
+     "start": 0,
+     "duration": 6,
+     "in": 0,
+     "volume": 0.8,
+     "fadeIn": 0,
+     "fadeOut": 0.5
+    }
+   ]
+  }
+ ],
+ "duration": 6
+}

@@ -1,0 +1,159 @@
+{
+ "id": "green-screen-demo",
+ "name": "green screen cutout",
+ "desc": "chroma-key a green screen video onto any bg",
+ "aspect": "9:16",
+ "fps": 30,
+ "bg": {
+  "type": "color",
+  "color": "#000000"
+ },
+ "tracks": [
+  {
+   "id": "tr24z86l",
+   "type": "video",
+   "name": "main",
+   "clips": [
+    {
+     "id": "v25xfea",
+     "type": "video",
+     "src": "asset:samples/gradient-sunset.mp4",
+     "start": 0,
+     "duration": 4,
+     "in": 0,
+     "speed": 1,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [],
+     "filter": {
+      "preset": "none"
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     },
+     "transition": {
+      "type": "none",
+      "dur": 0.5
+     },
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "tr26o3xv",
+   "type": "overlay",
+   "name": "cutout",
+   "clips": [
+    {
+     "id": "v27ed5v",
+     "type": "video",
+     "src": "asset:samples/greenscreen-demo.mp4",
+     "start": 0,
+     "duration": 4,
+     "in": 0,
+     "speed": 1,
+     "fit": "cover",
+     "transform": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "crop": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+     },
+     "effects": [],
+     "filter": {
+      "preset": "none"
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     },
+     "transition": {
+      "type": "none",
+      "dur": 0.5
+     },
+     "volume": 1,
+     "chroma": {
+      "enabled": true,
+      "key": "#00b140",
+      "similarity": 0.42,
+      "blend": 0.12
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr288ho1",
+   "type": "text",
+   "name": "text",
+   "clips": [
+    {
+     "id": "t290bzz",
+     "type": "text",
+     "start": 0.5,
+     "duration": 3,
+     "text": {
+      "content": "bg removed ✨",
+      "preset": "tiktok",
+      "size": 100
+     },
+     "transform": {
+      "x": 0,
+      "y": 0.34,
+      "scale": 1,
+      "rotation": 0,
+      "opacity": 1
+     },
+     "anim": {
+      "in": "none",
+      "out": "none",
+      "loop": "none",
+      "dur": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "tr2a0hk8",
+   "type": "audio",
+   "name": "audio",
+   "clips": [
+    {
+     "id": "a2bb88k",
+     "type": "audio",
+     "src": "asset:sounds/pop.mp3",
+     "start": 0,
+     "duration": 0.4,
+     "in": 0,
+     "volume": 1,
+     "fadeIn": 0,
+     "fadeOut": 0.5
+    }
+   ]
+  }
+ ],
+ "duration": 4
+}

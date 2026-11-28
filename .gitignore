@@ -1,0 +1,9 @@
+node_modules/
+uploads/
+renders/
+derived/
+data/
+*.log
+.DS_Store
+__pycache__/
+shoul-studio-source.zip

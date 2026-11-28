@@ -1,0 +1,232 @@
+[
+ {
+  "file": "Anton_400Regular.ttf",
+  "family": "Anton",
+  "weight": 400
+ },
+ {
+  "file": "BebasNeue_400Regular.ttf",
+  "family": "Bebas Neue",
+  "weight": 400
+ },
+ {
+  "file": "Oswald_400Regular.ttf",
+  "family": "Oswald",
+  "weight": 400
+ },
+ {
+  "file": "Oswald_700Bold.ttf",
+  "family": "Oswald",
+  "weight": 700
+ },
+ {
+  "file": "Montserrat_400Regular.ttf",
+  "family": "Montserrat",
+  "weight": 400
+ },
+ {
+  "file": "Montserrat_700Bold.ttf",
+  "family": "Montserrat",
+  "weight": 700
+ },
+ {
+  "file": "Montserrat_900Black.ttf",
+  "family": "Montserrat",
+  "weight": 900
+ },
+ {
+  "file": "Poppins_400Regular.ttf",
+  "family": "Poppins",
+  "weight": 400
+ },
+ {
+  "file": "Poppins_600SemiBold.ttf",
+  "family": "Poppins",
+  "weight": 600
+ },
+ {
+  "file": "Poppins_800ExtraBold.ttf",
+  "family": "Poppins",
+  "weight": 800
+ },
+ {
+  "file": "Inter_400Regular.ttf",
+  "family": "Inter",
+  "weight": 400
+ },
+ {
+  "file": "Inter_700Bold.ttf",
+  "family": "Inter",
+  "weight": 700
+ },
+ {
+  "file": "Inter_900Black.ttf",
+  "family": "Inter",
+  "weight": 900
+ },
+ {
+  "file": "Nunito_400Regular.ttf",
+  "family": "Nunito",
+  "weight": 400
+ },
+ {
+  "file": "Nunito_800ExtraBold.ttf",
+  "family": "Nunito",
+  "weight": 800
+ },
+ {
+  "file": "RobotoCondensed_400Regular.ttf",
+  "family": "Roboto Condensed",
+  "weight": 400
+ },
+ {
+  "file": "RobotoCondensed_700Bold.ttf",
+  "family": "Roboto Condensed",
+  "weight": 700
+ },
+ {
+  "file": "ArchivoBlack_400Regular.ttf",
+  "family": "Archivo Black",
+  "weight": 400
+ },
+ {
+  "file": "AbrilFatface_400Regular.ttf",
+  "family": "Abril Fatface",
+  "weight": 400
+ },
+ {
+  "file": "PlayfairDisplay_400Regular.ttf",
+  "family": "Playfair Display",
+  "weight": 400
+ },
+ {
+  "file": "PlayfairDisplay_700Bold.ttf",
+  "family": "Playfair Display",
+  "weight": 700
+ },
+ {
+  "file": "Lobster_400Regular.ttf",
+  "family": "Lobster",
+  "weight": 400
+ },
+ {
+  "file": "Pacifico_400Regular.ttf",
+  "family": "Pacifico",
+  "weight": 400
+ },
+ {
+  "file": "DancingScript_400Regular.ttf",
+  "family": "Dancing Script",
+  "weight": 400
+ },
+ {
+  "file": "DancingScript_700Bold.ttf",
+  "family": "Dancing Script",
+  "weight": 700
+ },
+ {
+  "file": "Caveat_400Regular.ttf",
+  "family": "Caveat",
+  "weight": 400
+ },
+ {
+  "file": "Caveat_700Bold.ttf",
+  "family": "Caveat",
+  "weight": 700
+ },
+ {
+  "file": "PermanentMarker_400Regular.ttf",
+  "family": "Permanent Marker",
+  "weight": 400
+ },
+ {
+  "file": "Bangers_400Regular.ttf",
+  "family": "Bangers",
+  "weight": 400
+ },
+ {
+  "file": "LuckiestGuy_400Regular.ttf",
+  "family": "Luckiest Guy",
+  "weight": 400
+ },
+ {
+  "file": "TitanOne_400Regular.ttf",
+  "family": "Titan One",
+  "weight": 400
+ },
+ {
+  "file": "Fredoka_400Regular.ttf",
+  "family": "Fredoka",
+  "weight": 400
+ },
+ {
+  "file": "Fredoka_600SemiBold.ttf",
+  "family": "Fredoka",
+  "weight": 600
+ },
+ {
+  "file": "PressStart2P_400Regular.ttf",
+  "family": "Press Start 2P",
+  "weight": 400
+ },
+ {
+  "file": "Righteous_400Regular.ttf",
+  "family": "Righteous",
+  "weight": 400
+ },
+ {
+  "file": "RubikMonoOne_400Regular.ttf",
+  "family": "Rubik Mono One",
+  "weight": 400
+ },
+ {
+  "file": "SpaceGrotesk_400Regular.ttf",
+  "family": "Space Grotesk",
+  "weight": 400
+ },
+ {
+  "file": "SpaceGrotesk_700Bold.ttf",
+  "family": "Space Grotesk",
+  "weight": 700
+ },
+ {
+  "file": "JetBrainsMono_400Regular.ttf",
+  "family": "JetBrains Mono",
+  "weight": 400
+ },
+ {
+  "file": "JetBrainsMono_800ExtraBold.ttf",
+  "family": "JetBrains Mono",
+  "weight": 800
+ },
+ {
+  "file": "Syne_400Regular.ttf",
+  "family": "Syne",
+  "weight": 400
+ },
+ {
+  "file": "Syne_800ExtraBold.ttf",
+  "family": "Syne",
+  "weight": 800
+ },
+ {
+  "file": "Sora_400Regular.ttf",
+  "family": "Sora",
+  "weight": 400
+ },
+ {
+  "file": "Sora_800ExtraBold.ttf",
+  "family": "Sora",
+  "weight": 800
+ },
+ {
+  "file": "NotoSans_400Regular.ttf",
+  "family": "Noto Sans",
+  "weight": 400
+ },
+ {
+  "file": "NotoSans_700Bold.ttf",
+  "family": "Noto Sans",
+  "weight": 700
+ }
+]
